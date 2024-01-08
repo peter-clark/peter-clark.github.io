@@ -1,6 +1,8 @@
-- name: Posts
+- name: Resume
+  link: /resume/
+- name: Research & Portfolio
+  link: /works/
+- name: Blog
   link: /posts
-- name: Categories
-  link: /categories/
-- name: About & Contact
-  link: /
+- name: About Me & Contact
+  link: /aboutme
