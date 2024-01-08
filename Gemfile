@@ -1,3 +1,7 @@
 source "https://rubygems.org"
-gem 'github-pages'
-gem "webrick", "~> 1.7"
+ruby "3.0.2"
+gem "jekyll"
+gem "jekyll-feed"
+gem "jekyll-paginate-v2"
+gem "jekyll-seo-tag"
+gem "webrick"
