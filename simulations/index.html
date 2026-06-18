@@ -1,0 +1,57 @@
+---
+layout: default
+title: Simulations
+---
+
+<h2>Simulations</h2>
+
+<p class="text-justify">
+A small collection of interactive simulations exploring how complex,
+emergent behavior arises from simple local rules. Everything runs in the
+browser on an HTML5 canvas — no backend, no dependencies. Click any tile
+to open the simulation.
+</p>
+
+<!-- ============================================================
+     SIMULATIONS GALLERY
+     Each tile is an <a class="sim-card"> linking to a sim page.
+     To add a new simulation:
+       1. Create simulations/<name>/index.html (copy an existing one,
+          set `sim_id: <name>` in its front matter).
+       2. Create assets/js/simulations/<name>.js (copy an existing skeleton).
+       3. Add a tile here using the template at the bottom of this list.
+     ============================================================ -->
+
+<div class="sim-gallery">
+    <a class="sim-card" href="/simulations/percolation/">
+        <h3>Percolation</h3>
+        <p>Randomly occupied cells on a lattice — does a connected cluster span the grid?</p>
+    </a>
+
+    <a class="sim-card" href="/simulations/forest-fire/">
+        <h3>Forest Fire</h3>
+        <p>Trees grow, lightning strikes, fire spreads. A classic self-organized critical system.</p>
+    </a>
+
+    <a class="sim-card" href="/simulations/sandpile/">
+        <h3>Abelian Sandpile</h3>
+        <p>Grains topple when a pile gets too tall, cascading into fractal avalanches.</p>
+    </a>
+
+    <a class="sim-card" href="/simulations/diffusion/">
+        <h3>Diffusion</h3>
+        <p>A random-walk / lattice diffusion model showing how concentration spreads out.</p>
+    </a>
+
+    <a class="sim-card" href="/simulations/life/">
+        <h3>Conway's Life</h3>
+        <p>The canonical cellular automaton — gliders, oscillators, and unbounded growth.</p>
+    </a>
+
+    <!-- NEW SIMULATION TILE TEMPLATE — copy and uncomment:
+    <a class="sim-card" href="/simulations/<name>/">
+        <h3>Display Name</h3>
+        <p>One-line description of the model.</p>
+    </a>
+    -->
+</div>

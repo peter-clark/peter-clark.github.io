@@ -1,8 +1,16 @@
-<div class="header">
-    <h1><a class="site-title-link" href="{{ '/' }}">Peter Clark</a></h1>
-    <br>
-    <h5><i>If it can be known, it'd be intolerable not to.</i></h5>
-    <br>
-    {% include nav.html %}
-    <hr>
+<div class="sidebar-inner">
+    <h1 class="site-title">
+        <a class="site-title-link" href="{{ '/' }}">neocorax</a><span class="binomial"><i>corvus corax novo</i></span>
+    </h1>
+
+    <nav class="tree">
+        <ul>
+            <li class="tree-root"><a href="{{ '/' }}">~</a></li>
+            {% for item in site.data.nav %}
+            <li><a href="{{ item.link }}">{{ item.name }}</a></li>
+            {% endfor %}
+        </ul>
+    </nav>
+
+    <p class="tagline"><i>If it can be known, it'd be intolerable not to.</i></p>
 </div>

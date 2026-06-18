@@ -1,18 +1,40 @@
 ---
 layout: default
-title: Peter Clark Works
+title: Research
 ---
 
-<h2><b>In Progress.</b></h2>
+<!-- ============================================================
+     RESEARCH PAGE
+     A simple list of research / writing / projects.
+     To add an entry, copy one <li> block below. Point href at a
+     PDF, external page, or "#" if there's nothing to link yet.
+     The <span class="meta"> part is the small grey caption.
+     ============================================================ -->
 
-<h2>Categories</h2>
-{% for category in site.categories %}
-    <h3 class="category-header"><b>{{category | first}}</b></h3>
-        {% for post in category[1] limit:3 %}
-        <span class="post-item">{{ post.date | date: '%Y-%m-%d' }} >> <a href="{{ post.url }}">{{ post.title }}</a></span>
-        {% endfor %}
-<div class="category-all-nav">
-    <h4>See all posts in {{category | first}} ({{category[1] | size}}) <a href="/category/{{category | first | downcase }}/">&gt;&gt;</a></h4>
-</div>
-{% endfor %}
+<h2>Research</h2>
 
+<p class="text-justify">
+Selected research, writing, and projects. (In progress — more to come.)
+</p>
+
+<ul class="link-list">
+    <li>
+        <a href="#">Tap to Drums: Extending Monophonically Tapped Rhythms to Polyphonic Drum Pattern Generation</a>
+        <span class="meta">— MSc thesis, Sound &amp; Music Computing, UPF (2023)</span>
+    </li>
+    <li>
+        <a href="#">The Effect of External Motivation on Strategy-Selection in Working Memory Updating Tasks</a>
+        <span class="meta">— BSc thesis, Artificial Intelligence, RUG (2021)</span>
+    </li>
+    <li>
+        <a href="#">Consciousness in Non-Human Animals: Problems and Progress</a>
+        <span class="meta">— BA thesis, Philosophy of Cognitive Science, RUG (2021)</span>
+    </li>
+
+    <!-- NEW ENTRY TEMPLATE — copy, uncomment, and fill in:
+    <li>
+        <a href="#">Title of the work</a>
+        <span class="meta">— venue / type, institution (year)</span>
+    </li>
+    -->
+</ul>

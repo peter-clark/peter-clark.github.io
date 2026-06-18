@@ -2,13 +2,13 @@
 
 /* Base */
 html {
-  font-size: 18px;
+  font-size: 16px;
 }
 
 /* 01 Font family */
-
+/* Courier-flavoured monospace for the retro terminal look. */
 body {
-  font-family: "Helvetica", sans-serif;
+  font-family: "Courier New", Courier, "Nimbus Mono PS", monospace;
 }
 
 /* 03 Spacing */
@@ -32,7 +32,8 @@ div.main-content h2 {
 }
 
 h1 {
-  font-family: "Georgia", serif;
+  font-family: inherit;
+  font-size: 1.4rem;
 }
 
 header h1, header h5 {
@@ -42,18 +43,19 @@ header h1, header h5 {
 /* 04 Color and contrast */
 
 body {
-  color: #c5ccce;
-  background-color: #002c2b;
+  color: #111;
+  background-color: #f4f4f5;
 }
 
 h1,
 h2,
 strong {
-  color: #dcdede;
+  color: #000;
 }
 
 header h5 {
-  font-weight: lighter;
+  font-weight: normal;
+  color: #444;
 }
 
 /* 05 Balance */
@@ -66,7 +68,11 @@ code {
 /* 06 Primary color */
 
 a {
-  color: #dcdede;
+  color: #000;
+}
+
+a:hover {
+  color: #666;
 }
 
 /* 07 Secondary colors */
@@ -93,7 +99,29 @@ strong {
   display: inline;
 }
 
+/* Plain list of links (Research page, etc.) */
+.link-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.link-list li {
+  padding: 8px 0;
+  border-bottom: 1px solid #dddde0;
+  line-height: 1.5;
+}
+
+.link-list .meta {
+  color: #666;
+  font-size: 0.85rem;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid #d6d6d8;
+}
+
 hr.small {
   border: 0;
-  border-top: 1px solid #4e7070;
+  border-top: 1px solid #d6d6d8;
 }

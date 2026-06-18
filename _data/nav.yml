@@ -1,8 +1,8 @@
-- name: Resume
+# Tree-nav items shown in the left sidebar (see _includes/header.html).
+# Add a new line pair to add a branch; order here = order on screen.
+- name: CV
   link: /resume/
-- name: Research & Portfolio
+- name: Research
   link: /works/
-- name: Blog
-  link: /posts
-- name: About Me & Contact
-  link: /aboutme
+- name: Simulations
+  link: /simulations/

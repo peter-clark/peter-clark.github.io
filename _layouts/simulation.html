@@ -1,0 +1,37 @@
+---
+layout: default
+---
+
+<p><a href="/simulations/">&laquo; All simulations</a></p>
+
+<h2>{{ page.title }}</h2>
+
+{% if page.description %}
+<p class="text-justify">{{ page.description }}</p>
+{% endif %}
+
+<div class="sim-stage">
+    <div class="sim-canvas-wrap">
+        <!-- The simulation renders here. Width/height are the pixel resolution;
+             CSS scales the element to fit its column. -->
+        <canvas id="sim-canvas" width="400" height="400"></canvas>
+    </div>
+
+    <div class="sim-controls" id="sim-controls">
+        <button id="sim-toggle">Start / Pause</button>
+        <button id="sim-step" class="secondary">Step</button>
+        <button id="sim-reset" class="secondary">Reset</button>
+
+        <!-- Per-simulation parameter controls are injected by each sim's JS.
+             See the skeleton in assets/js/simulations/{{ page.sim_id }}.js -->
+        <div id="sim-params"></div>
+
+        <div class="sim-readout" id="sim-readout"></div>
+    </div>
+</div>
+
+{{ content }}
+
+<!-- Shared helpers (grid, render loop) then the specific simulation. -->
+<script src="{{ site.baseurl }}/assets/js/simulations/engine.js"></script>
+<script src="{{ site.baseurl }}/assets/js/simulations/{{ page.sim_id }}.js"></script>

@@ -5,20 +5,19 @@
 </head>
 
 <body>
-    <div class="wrapper">
-        <header class="wrapper-header">
+    <div class="page">
+        <aside class="sidebar">
             {% include header.html %}
-        </header>
+        </aside>
 
-        <main class="wrapper-main">
+        <main class="main">
             <div class="main-content">
             {{ content }}
             </div>
+            <footer class="site-footer">
+                {% include footer.html %}
+            </footer>
         </main>
     </div>
-
-    <footer class="wrapper-footer">
-        {% include footer.html %}
-    </footer>
 </body>
 </html>

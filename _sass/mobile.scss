@@ -1,3 +1,37 @@
+/* Stack the sidebar above the content on narrow screens. */
+@media only screen and (max-width: 700px) {
+  .page {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    flex: 0 0 auto;
+    width: 100%;
+    position: static;
+    border-right: 0;
+    border-bottom: 1px solid #b9b9bd;
+  }
+
+  .tree ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 18px;
+  }
+
+  .tree li::before,
+  .tree li:last-child::before {
+    content: "";
+  }
+
+  .tree li {
+    padding-left: 0;
+  }
+
+  .tagline {
+    display: none;
+  }
+}
+
 @media only screen and (max-width: 479px) {
 
   // Hide clutter elements on mobile
