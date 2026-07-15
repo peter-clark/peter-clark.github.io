@@ -2,6 +2,7 @@
 layout: simulation
 title: Percolation
 sim_id: percolation
+plotly: true
 description: >
   Each cell of a square lattice is independently occupied with probability p.
   Below a critical p the occupied cells form only small, isolated clusters;
@@ -9,3 +10,23 @@ description: >
   cluster appear as you sweep p across the percolation threshold (~0.5927 for
   site percolation on a square lattice).
 ---
+
+<!-- Body content renders BELOW the four graphs. Edit freely. -->
+<div class="text-justify" style="margin-top: 26px;">
+<h3>How it works</h3>
+<p>
+Press <strong>Start</strong> to run a repeated sweep over p. Each cycle draws one
+random field for the whole lattice and visits every p on a fixed grid, labelling
+clusters with union-find; the four graphs average over all cycles and converge as
+it runs. The lattice shown is sampled at exactly the <strong>p</strong> you set
+(slider or type a value) — the red cluster, when present, is the one spanning top
+to bottom. Larger lattices sharpen the transition near
+p<sub>c</sub> ≈ 0.5927 (dotted red line) but cost more per frame.
+</p>
+<p><em>Graphs:</em>
+(a) mean finite cluster size S(p);
+(b) cluster-size distribution n<sub>s</sub> at the displayed p (log-log, ~power law at p<sub>c</sub>);
+(c) percolation strength P<sub>∞</sub>(p), the fraction of sites in the spanning cluster;
+(d) spanning probability Π(p), the fraction of sampled states that percolate.
+</p>
+</div>

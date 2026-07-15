@@ -15,7 +15,7 @@ title: neocorax
 ---
 
 <!-- Highlight / "what I'm working on" block. Add or replace freely. -->
-<p>Lately I've been working on a small set of <a href="/simulations/">interactive simulations</a> (under construction) — percolation, forest fires, sandpiles, diffusion, and Conway's Life — exploring how complex behavior emerges from simple rules.</p>
+<p>(under construction) Statistical Physics Simulations <a href="/simulations/"> simulations</a> — percolation, forest fires, sandpiles, diffusion</p>
 
 <!-- ADD MORE HOME-PAGE SECTIONS HERE
      e.g. a short list of recent updates, links, or a contact line:

@@ -70,6 +70,11 @@
   font-size: 0.85rem;
 }
 
+/* Range sliders in the site accent colour (teal). */
+.sim-controls input[type="range"] {
+  accent-color: #2c6e6b;
+}
+
 .sim-controls label {
   color: #555;
 }
@@ -100,4 +105,78 @@
   font-size: 0.8rem;
   color: #555;
   line-height: 1.5;
+}
+
+/* p slider + typable number box on one row */
+.sim-controls .p-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sim-controls .p-row input[type="range"] {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.sim-controls .p-row input[type="text"] {
+  flex: 0 0 74px;
+  width: 74px;
+  padding: 4px 6px;
+  border: 1px solid #c8c8cc;
+  border-radius: 4px;
+  background: #fff;
+  font-family: inherit;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+/* No spinner arrows on any numeric control here. */
+.sim-controls input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+.sim-controls input[type="number"]::-webkit-outer-spin-button,
+.sim-controls input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Full-width live-graph area below the canvas + controls */
+.sim-below {
+  margin-top: 26px;
+}
+
+.sim-below:empty {
+  display: none;
+}
+
+.sim-graph-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+/* Simulations with a single plot get the full width. */
+.sim-graph-grid.single {
+  grid-template-columns: 1fr;
+}
+
+.sim-graph {
+  width: 100%;
+  height: 300px;
+  background: #f4f4f5;      /* match the page background */
+  border: 1px solid #dcdcdf;
+  border-radius: 6px;
+}
+
+.sim-note {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+@media only screen and (max-width: 640px) {
+  .sim-graph-grid {
+    grid-template-columns: 1fr;
+  }
 }

@@ -30,7 +30,22 @@ layout: default
     </div>
 </div>
 
+<!-- Full-width area below the canvas + controls. Simulations that produce
+     live plots (e.g. percolation) inject their graphs here. -->
+<div id="sim-below" class="sim-below"></div>
+
 {{ content }}
+
+{% if page.plotly %}
+<!-- MathJax v3 lets Plotly render $...$ LaTeX in axis labels, and (unlike v2)
+     keeps re-rendering them as the plots update. Must load before Plotly. -->
+<script>
+  window.MathJax = { tex: { inlineMath: [['$', '$']] }, svg: { fontCache: 'local' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
+<!-- Plotly is only pulled in on pages that set `plotly: true` in front matter. -->
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js" charset="utf-8"></script>
+{% endif %}
 
 <!-- Shared helpers (grid, render loop) then the specific simulation. -->
 <script src="{{ site.baseurl }}/assets/js/simulations/engine.js"></script>

@@ -2,9 +2,32 @@
 layout: simulation
 title: Forest Fire
 sim_id: forest-fire
+plotly: true
 description: >
   Each cell is empty, a tree, or burning. Empty cells grow trees with
   probability p; trees ignite from burning neighbours, or spontaneously by
   lightning with probability f. The Drossel–Schwabl model self-organizes to a
   critical state where fire sizes follow a power law.
 ---
+
+<!-- Body content renders BELOW the graph. Edit freely. -->
+<div class="text-justify" style="margin-top: 26px;">
+<h3>How it works</h3>
+<p>
+Press <strong>Start</strong> to run the model. Teal cells are trees, black
+cells are actively burning, and light cells are empty ground. Each timestep
+every burning cell turns to ash, every tree next to a fire catches, empty
+ground regrows a tree with probability <strong>p</strong>, and any tree may be
+struck by lightning with probability <strong>f</strong>.
+</p>
+<p>
+When lightning strikes, the connected cluster of trees around it is exactly
+what the fire will consume, so that cluster's size is recorded as one outbreak.
+The graph plots the log-binned frequency <em>N(s)</em> of outbreaks of size
+<em>s</em> on log-log axes. As the forest self-organizes it approaches a
+critical state and the distribution straightens into a power law — small fires
+are common, system-spanning ones are rare but never absent. The separation of
+timescales matters: the smaller <strong>f/p</strong> is, the cleaner the
+scaling.
+</p>
+</div>
