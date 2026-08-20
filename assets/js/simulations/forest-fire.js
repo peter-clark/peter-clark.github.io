@@ -28,15 +28,17 @@
   const GRAPH_MS = 400;           // min ms between graph refreshes
   const MAX_STEPS_PER_FRAME = 8;  // don't jank the page when speed is high
 
-  // Site palette (keep in sync with _sass): teal accent, gray text, light bg.
-  const TEAL = '#2c6e6b';
-  const PAGE_BG = '#f4f4f5';
-  const GRID_COLOR = '#d5d5d8';
+  // Shared DarkMech palette (see engine.js -> SimTheme). Fallback inline so the
+  // file still runs if the theme object is ever missing.
+  const T = window.SimTheme || {};
+  const ACCENT = T.accent || '#e67300';
+  const PAGE_BG = T.panelBg || '#0b0b0b';
+  const GRID_COLOR = T.grid || '#333333';
 
-  // Lattice cell colours, all taken from the site palette.
-  const COLOR_EMPTY = [244, 244, 245];   // #f4f4f5, page background
-  const COLOR_TREE = [44, 110, 107];     // #2c6e6b, teal accent
-  const COLOR_FIRE = [17, 17, 17];       // #111, site text colour
+  // Lattice cell colours. In the dark theme fire IS the orange accent.
+  const COLOR_EMPTY = T.empty || [11, 11, 11];   // dark ground
+  const COLOR_TREE = T.tree || [79, 122, 58];    // muted green
+  const COLOR_FIRE = T.fire || [230, 115, 0];    // orange fire (accent)
 
   /* ==================================================================== *
    *  EDIT ME — graph appearance.                                         *
@@ -51,7 +53,7 @@
     fire: {
       title: 'Fire-size distribution',
       xlabel: '$s$', ylabel: '$N(s)$',
-      marker: { symbol: 'circle', size: 6, color: TEAL },
+      marker: { symbol: 'circle', size: 6, color: ACCENT },
     },
   };
 
@@ -348,7 +350,7 @@
   const hasPlotly = typeof window.Plotly !== 'undefined';
   let graphReady = false;
 
-  const FONT = { family: '"Courier New", Courier, monospace', size: 13, color: '#222' };
+  const FONT = { family: T.font || 'Verdana, Geneva, Tahoma, sans-serif', size: 12, color: T.text || '#9a9a9a' };
 
   function axis(title, extra) {
     return Object.assign({

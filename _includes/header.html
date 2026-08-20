@@ -1,16 +1,7 @@
-<div class="sidebar-inner">
-    <h1 class="site-title">
-        <a class="site-title-link" href="{{ '/' }}">neocorax</a><span class="binomial"><i>corvus corax novo</i></span>
-    </h1>
-
-    <nav class="tree">
-        <ul>
-            <li class="tree-root"><a href="{{ '/' }}">~</a></li>
-            {% for item in site.data.nav %}
-            <li><a href="{{ item.link }}">{{ item.name }}</a></li>
-            {% endfor %}
-        </ul>
-    </nav>
-
-    <p class="tagline"><i>If it can be known, it'd be intolerable not to.</i></p>
-</div>
+<div class="dm-panel"><div class="dm-panel__inner dm-banner__inner">
+    <div class="dm-brand">
+        <a href="{{ '/' }}"><span class="dm-brand__name">neocorax</span></a>
+        <span class="dm-brand__sub"><i>corvus corax novo</i></span>
+    </div>
+    {% include nav.html %}
+</div></div>

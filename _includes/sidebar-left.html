@@ -1,0 +1,14 @@
+<div class="dm-panel"><div class="dm-panel__inner">
+    <div class="dm-panel__title">Navigation</div>
+    <ul class="dm-navlinks">
+        <li><a href="{{ '/' }}">Home</a></li>
+        {% for item in site.data.nav %}
+        <li><a href="{{ item.link }}">{{ item.name }}</a></li>
+        {% endfor %}
+    </ul>
+</div></div>
+
+<div class="dm-panel"><div class="dm-panel__inner">
+    <div class="dm-panel__title">Motto</div>
+    <p class="dm-placeholder"><i>If it can be known, it'd be intolerable not to.</i></p>
+</div></div>

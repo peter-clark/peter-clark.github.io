@@ -197,5 +197,26 @@
     },
   };
 
-  global.Sim = { Grid, SimEngine, ui };
+  /* ------------------------------------------------------------------ */
+  /* SimTheme: one shared palette for every simulation (DarkMech).       */
+  /* Kept in sync with _sass/darkmech.scss. Change it here to re-skin    */
+  /* all canvases + graphs at once.                                      */
+  /* ------------------------------------------------------------------ */
+  const SimTheme = {
+    panelBg: '#0b0b0b',   // canvas / plot background (matches .sim-graph)
+    grid:    '#333333',   // plot gridlines
+    text:    '#9a9a9a',   // plot font colour
+    accent:  '#e67300',   // orange accent
+    accentRGB: [230, 115, 0],
+    font: 'Verdana, Geneva, Tahoma, sans-serif',
+    // lattice cell colours as [r,g,b]
+    empty:  [11, 11, 11],    // dark ground
+    finite: [95, 95, 98],    // neutral gray clusters
+    span:   [230, 115, 0],   // orange, the spanning cluster
+    tree:   [79, 122, 58],   // muted green
+    fire:   [230, 115, 0],   // orange fire
+  };
+
+  global.SimTheme = SimTheme;
+  global.Sim = { Grid, SimEngine, ui, theme: SimTheme };
 })(window);

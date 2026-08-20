@@ -37,15 +37,17 @@
   const P_GRID = new Float64Array(NP);
   for (let k = 0; k < NP; k++) P_GRID[k] = k / (NP - 1);
 
-  // Site palette (keep in sync with _sass): teal accent, gray text, light bg.
-  const TEAL = '#2c6e6b';
-  const PAGE_BG = '#f4f4f5';
-  const GRID_COLOR = '#d5d5d8';
+  // Shared DarkMech palette (see engine.js -> SimTheme). Fallback inline so the
+  // file still runs if the theme object is ever missing.
+  const T = window.SimTheme || {};
+  const ACCENT = T.accent || '#e67300';
+  const PAGE_BG = T.panelBg || '#0b0b0b';
+  const GRID_COLOR = T.grid || '#333333';
 
-  // Lattice cell colours. Spanning cluster uses the site accent (teal).
-  const COLOR_EMPTY = [244, 244, 245];   // #f4f4f5, page background
-  const COLOR_FINITE = [140, 140, 143];  // neutral gray
-  const COLOR_SPAN = [44, 110, 107];     // #2c6e6b, teal accent
+  // Lattice cell colours. Spanning cluster uses the accent (orange).
+  const COLOR_EMPTY = T.empty || [11, 11, 11];    // dark ground
+  const COLOR_FINITE = T.finite || [95, 95, 98];  // neutral gray
+  const COLOR_SPAN = T.span || [230, 115, 0];     // orange accent
 
   /* ==================================================================== *
    *  EDIT ME — graph appearance.                                         *
@@ -61,22 +63,22 @@
     meanS: {
       title: 'a) Mean finite cluster size',
       xlabel: '$p$', ylabel: '$S(p)$',
-      marker: { symbol: 'circle', size: 6, color: TEAL },
+      marker: { symbol: 'circle', size: 6, color: ACCENT },
     },
     dist: {
       title: 'b) Cluster-size distribution',
       xlabel: '$s$', ylabel: '$n_s$',
-      marker: { symbol: 'circle', size: 6, color: TEAL },
+      marker: { symbol: 'circle', size: 6, color: ACCENT },
     },
     pinf: {
       title: 'c) Size of spanning cluster',
       xlabel: '$p$', ylabel: '$P_\\infty(p)$',
-      marker: { symbol: 'circle', size: 6, color: TEAL },
+      marker: { symbol: 'circle', size: 6, color: ACCENT },
     },
     span: {
       title: 'd) Probability of a spanning cluster',
       xlabel: '$p$', ylabel: '$\\Pi(p)$',
-      marker: { symbol: 'circle', size: 6, color: TEAL },
+      marker: { symbol: 'circle', size: 6, color: ACCENT },
     },
   };
 
@@ -424,7 +426,7 @@
   const hasPlotly = typeof window.Plotly !== 'undefined';
   let graphsReady = false;
 
-  const FONT = { family: '"Courier New", Courier, monospace', size: 13, color: '#222' };
+  const FONT = { family: T.font || 'Verdana, Geneva, Tahoma, sans-serif', size: 12, color: T.text || '#9a9a9a' };
 
   // Shared axis defaults: short scientific-notation ticks, readable font.
   function axis(title, extra) {
@@ -454,7 +456,7 @@
   // Vertical p_c reference line for the p-axis plots.
   const pcLine = {
     type: 'line', x0: P_CRIT, x1: P_CRIT, y0: 0, y1: 1, yref: 'paper',
-    line: { color: TEAL, width: 1, dash: 'dot' },
+    line: { color: ACCENT, width: 1, dash: 'dot' },
   };
 
   function buildGraphs() {

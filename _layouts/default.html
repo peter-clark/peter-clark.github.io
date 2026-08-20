@@ -5,19 +5,32 @@
 </head>
 
 <body>
-    <div class="page">
-        <aside class="sidebar">
-            {% include header.html %}
-        </aside>
+    <div class="dm-wrapper">
 
-        <main class="main">
-            <div class="main-content">
-            {{ content }}
-            </div>
-            <footer class="site-footer">
-                {% include footer.html %}
-            </footer>
-        </main>
+        <header class="dm-banner">
+            {% include header.html %}
+        </header>
+
+        <div class="dm-body">
+            <aside class="dm-col dm-col-left">
+                {% include sidebar-left.html %}
+            </aside>
+
+            <main class="dm-center">
+                <div class="dm-panel"><div class="dm-panel__inner">
+                    {{ content }}
+                </div></div>
+            </main>
+
+            <aside class="dm-col dm-col-right">
+                {% include sidebar-right.html %}
+            </aside>
+        </div>
+
+        <footer class="dm-footer">
+            {% include footer.html %}
+        </footer>
+
     </div>
 </body>
 </html>
