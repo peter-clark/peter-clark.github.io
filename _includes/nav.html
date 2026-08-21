@@ -1,6 +1,8 @@
-<nav class="dm-hznav">
-    <a href="{{ '/' }}"{% if page.url == '/' %} class="is-active"{% endif %}>Home</a>
-    {% for item in site.data.nav %}
-    <a href="{{ item.link }}"{% if page.url contains item.link and item.link != '/' %} class="is-active"{% endif %}>{{ item.name }}</a>
-    {% endfor %}
-</nav>
+<div id="hz-menu">
+    <ul>
+        <li><a class="hbutton" href="{{ '/' }}">Home</a></li>
+        {% for item in site.data.nav %}
+        <li><a class="hbutton" href="{{ item.link }}">{{ item.name }}</a></li>
+        {% endfor %}
+    </ul>
+</div>

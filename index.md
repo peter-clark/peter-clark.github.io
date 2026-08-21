@@ -1,6 +1,7 @@
 ---
 layout: default
 title: neocorax
+menutitle: false
 ---
 
 <!-- ============================================================

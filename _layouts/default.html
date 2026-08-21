@@ -5,32 +5,49 @@
 </head>
 
 <body>
-    <div class="dm-wrapper">
 
-        <header class="dm-banner">
-            {% include header.html %}
-        </header>
+<div id="wrapper">
 
-        <div class="dm-body">
-            <aside class="dm-col dm-col-left">
-                {% include sidebar-left.html %}
-            </aside>
-
-            <main class="dm-center">
-                <div class="dm-panel"><div class="dm-panel__inner">
-                    {{ content }}
-                </div></div>
-            </main>
-
-            <aside class="dm-col dm-col-right">
-                {% include sidebar-right.html %}
-            </aside>
-        </div>
-
-        <footer class="dm-footer">
-            {% include footer.html %}
-        </footer>
-
+    <div id="TopBanner">
+        {% include header.html %}
     </div>
+
+    <div id="bodytop"></div>
+
+    <div id="bodyfill">
+        <div id="content">
+
+            <div id="COL-left">
+                {% include sidebar-left.html %}
+            </div>
+
+            <div id="COL-right">
+                {% include sidebar-right.html %}
+            </div>
+
+            <div id="COL-center">
+                <div class="menubox">
+                    <div class="menutop"></div>
+                    <div class="menufill">
+                        {% unless page.menutitle == false %}<div class="menutitle">{{ page.title }}</div>{% endunless %}
+                        <div class="menuinfoL">
+                            {{ content }}
+                        </div>
+                    </div>
+                    <div class="menufoot"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="bodybottom"></div>
+
+    <div id="footer">
+        {% include footer.html %}
+    </div>
+
+</div>
+
 </body>
 </html>
