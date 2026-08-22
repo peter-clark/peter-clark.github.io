@@ -153,32 +153,44 @@ p { padding: 2px; margin: 4px 0; }
   height: 100%;
   overflow: hidden;
 }
-/* Every sidebar title IS a button by default (same butnoverclick.png sprite as
-   the nav bar) — it's the box header. A link inside just makes it clickable;
-   a title without a link still renders as a button. */
 .navhead {
+  font-weight: bold;
+  color: #808080;
+  text-decoration: none;
+  text-align: center;
+  line-height: 52px;
+  background-image: url('/assets/theme/navtop.jpg');
+  padding: 0;
+  margin: 0;
+  width: 172px;
+  height: 68px;
+  position: relative;
+  overflow: hidden;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+/* The title is a nav-bar-style pill button (butnoverclick.png sprite) centred
+   on the navtop plate; the plate stays visible around it. */
+.navhead a {
+  display: block;
+  width: 144px;
   height: 32px;
   line-height: 32px;
-  margin: 0 8px 6px;
-  padding: 0 10px;
+  margin: 11px auto 0;         /* centre the pill in the plate recess (~y27) */
+  padding: 0 8px;
   box-sizing: border-box;
-  font-weight: bold;
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   color: #808080;
-  position: relative;
-  background: url('/assets/theme/butnoverclick.png') no-repeat 0 0;
-  background-size: 100% 64px;   /* stretch pill to width; 2 states, 32px each */
-}
-.navhead:hover { background-position: 0 -32px; color: #f2f2f2; } /* orange state */
-.navhead a {
-  display: block;
-  width: 100%;
-  height: 100%;
-  color: inherit;              /* colour handled by .navhead */
   text-decoration: none;
+  background: url('/assets/theme/butnoverclick.png') no-repeat 0 0;
+  background-size: 100% 64px;  /* two states, 32px each */
+}
+.navhead a:hover, .navhead a:focus, .navhead a:active {
+  background-position: 0 -32px;  /* orange state */
+  color: #f2f2f2;
 }
 .navbody {
   background-image: url('/assets/theme/nav_filler.gif');
