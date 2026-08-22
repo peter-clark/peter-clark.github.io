@@ -198,8 +198,8 @@
   };
 
   /* ------------------------------------------------------------------ */
-  /* SimTheme: one shared palette for every simulation (DarkMech).       */
-  /* Kept in sync with _sass/darkmech.scss. Change it here to re-skin    */
+  /* SimTheme: one shared palette for every simulation.       */
+  /* Kept in sync with _sass/theme.scss. Change it here to re-skin    */
   /* all canvases + graphs at once.                                      */
   /* ------------------------------------------------------------------ */
   const SimTheme = {

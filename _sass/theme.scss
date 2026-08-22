@@ -1,12 +1,10 @@
 @charset "utf-8";
 
 /* ============================================================
-   DarkMech theme — faithful port of the ThemeKings "Dark Mech"
-   template (Todd Swift / themekings.net). Structure, metrics and
-   image slices match TEMPLATE.html / darkmech.css. Images live in
-   /assets/darkmech/theme/. Additions for this site (banner title,
-   simulation UI) are grouped at the bottom and kept in the same
-   flat, image-driven style — no CSS drop shadows or bevels.
+   neocorax site theme — dark, metal-panel look built from image
+   slices in /assets/theme/ (banner, nav/menu box caps, button
+   sprite). Site-specific additions (banner title, simulation UI)
+   are grouped at the bottom, kept flat and image-driven.
    ============================================================ */
 
 /* The template's many height:100% rules are meant to collapse to content
@@ -23,14 +21,25 @@ body {
   font-size: 0.7em;
 }
 
+/* Animated background effect layer — fills the whole viewport behind the
+   wrapper, so only the gray page ground shows it. The effect script
+   (set by `background_effect` in _config.yml) renders into #bg-fx. */
+#bg-fx {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  /*background-color: #808080;*/
+}
+
 #wrapper {
-  background-image: url('/assets/darkmech/theme/bdyfiller.gif');
+  background-image: url('/assets/theme/bdyfiller.gif');
   background-repeat: repeat-y;
   margin: 0 auto;
   padding: 0;
   width: 990px;
   height: 100%;
   position: relative;
+  z-index: 1;            /* sit above the background layer */
   overflow: hidden;
 }
 
@@ -43,12 +52,12 @@ body {
   height: 233px;
   position: relative;
   overflow: hidden;
-  background-image: url('/assets/darkmech/theme/TopBanner3.jpg');
+  background-image: url('/assets/theme/TopBanner3.jpg');
   background-repeat: no-repeat;
 }
 
 #bodytop {
-  background-image: url('/assets/darkmech/theme/bodyfillertop.jpg');
+  background-image: url('/assets/theme/bodyfillertop.jpg');
   background-repeat: no-repeat;
   padding: 0;
   margin: 0;
@@ -66,7 +75,7 @@ body {
   overflow: hidden;
 }
 #bodybottom {
-  background-image: url('/assets/darkmech/theme/bodyfillerbtm.jpg');
+  background-image: url('/assets/theme/bodyfillerbtm.jpg');
   background-repeat: no-repeat;
   padding: 0;
   margin: 0;
@@ -76,7 +85,7 @@ body {
   overflow: hidden;
 }
 #footer {
-  background-image: url('/assets/darkmech/theme/footer.jpg');
+  background-image: url('/assets/theme/footer.jpg');
   background-repeat: no-repeat;
   padding: 0;
   margin: 0;
@@ -94,11 +103,11 @@ body {
   overflow: hidden;
 }
 
-/* LINKS */
-a.page:link, a.page:visited { color: #000000; }
-a.page:hover { color: #666666; }
-a.URL:link, a.URL:visited { color: #808080; text-decoration: underline; }
-a.URL:hover { color: #E67300; text-decoration: underline; }
+/* LINKS
+   Text links inherit the surrounding colour and never underline or change on
+   hover/visit. Interactive elements (nav buttons, sidebar title buttons) opt
+   into hover styling with their own rules. */
+a, a:link, a:visited, a:hover, a:active { color: inherit; text-decoration: none; }
 
 p { padding: 2px; margin: 4px 0; }
 
@@ -144,24 +153,35 @@ p { padding: 2px; margin: 4px 0; }
   height: 100%;
   overflow: hidden;
 }
+/* Every sidebar title IS a button by default (same butnoverclick.png sprite as
+   the nav bar) — it's the box header. A link inside just makes it clickable;
+   a title without a link still renders as a button. */
 .navhead {
+  height: 32px;
+  line-height: 32px;
+  margin: 0 8px 6px;
+  padding: 0 10px;
+  box-sizing: border-box;
   font-weight: bold;
-  color: #808080;
-  text-decoration: none;
   text-align: center;
-  line-height: 400%;
-  background-image: url('/assets/darkmech/theme/navtop.jpg');
-  padding: 0;
-  margin: 0;
-  width: 172px;
-  height: 68px;
-  position: relative;
+  white-space: nowrap;
   overflow: hidden;
-  background-repeat: no-repeat;
-  background-position: center;
+  text-overflow: ellipsis;
+  color: #808080;
+  position: relative;
+  background: url('/assets/theme/butnoverclick.png') no-repeat 0 0;
+  background-size: 100% 64px;   /* stretch pill to width; 2 states, 32px each */
+}
+.navhead:hover { background-position: 0 -32px; color: #f2f2f2; } /* orange state */
+.navhead a {
+  display: block;
+  width: 100%;
+  height: 100%;
+  color: inherit;              /* colour handled by .navhead */
+  text-decoration: none;
 }
 .navbody {
-  background-image: url('/assets/darkmech/theme/nav_filler.gif');
+  background-image: url('/assets/theme/nav_filler.gif');
   background-repeat: repeat-y;
   background-position: center;
   margin: 0;
@@ -172,7 +192,7 @@ p { padding: 2px; margin: 4px 0; }
   overflow: hidden;
 }
 .navfooter {
-  background-image: url('/assets/darkmech/theme/navfooter.jpg');
+  background-image: url('/assets/theme/navfooter.jpg');
   background-repeat: no-repeat;
   background-position: center;
   margin: 0;
@@ -225,7 +245,7 @@ p { padding: 2px; margin: 4px 0; }
   overflow: hidden;
 }
 .menutop {
-  background-image: url('/assets/darkmech/theme/menu_top.jpg');
+  background-image: url('/assets/theme/menu_top.jpg');
   background-repeat: no-repeat;
   background-position: center;
   padding: 0;
@@ -236,7 +256,7 @@ p { padding: 2px; margin: 4px 0; }
   overflow: hidden;
 }
 .menufill {
-  background-image: url('/assets/darkmech/theme/menu_filler.gif');
+  background-image: url('/assets/theme/menu_filler.gif');
   background-repeat: repeat-y;
   background-position: center;
   padding: 0;
@@ -247,7 +267,7 @@ p { padding: 2px; margin: 4px 0; }
   overflow: hidden;
 }
 .menufoot {
-  background-image: url('/assets/darkmech/theme/menu_btm.jpg');
+  background-image: url('/assets/theme/menu_btm.jpg');
   background-repeat: no-repeat;
   background-position: center;
   padding: 0;
@@ -309,6 +329,7 @@ p { padding: 2px; margin: 4px 0; }
   width: 470px;
   height: 32px;
   position: relative;
+  z-index: 2;
   overflow: visible;
   list-style-type: none;
 }
@@ -331,7 +352,7 @@ p { padding: 2px; margin: 4px 0; }
 a.hbutton {
   padding: 0;
   margin: 0;
-  background: url('/assets/darkmech/theme/butnoverclick.png') no-repeat 0 0;
+  background: url('/assets/theme/butnoverclick.png') no-repeat 0 0;
   width: 90px;
   height: 32px;
   display: block;
@@ -348,11 +369,36 @@ a.hbutton:hover, a.hbutton:active {
    Site-specific additions (kept flat, in the template's style)
    ============================================================ */
 
-/* Banner title text, overlaid on the empty banner inset */
+/* Banner effect layer, sized to the glossy inset of TopBanner3.jpg so it sits
+   inside the silver border, behind the title/subtitle. Rounded to match the
+   inset's corners. (Inset measured at left 12 / top 20 / right 977 / bottom
+   ~178 within the 990x233 banner.) */
+#banner-fx {
+  position: absolute;
+  top: 40px;
+  left: 30px;
+  right: 16px;
+  height: 128px;
+  width: 930px;
+  border-radius: 13px;
+  overflow: hidden;   /* clips the larger effect layer inside */
+  z-index: 0;
+}
+
+/* The effect renders into this layer, which is larger than the clip box on
+   every side, so the animated pattern extends past the visible edges and gets
+   clipped — no hard edge is visible as the pattern moves. */
+#banner-fx-layer {
+  position: absolute;
+  inset: -60px;
+}
+
+/* Banner title text, overlaid on the banner inset (above the dither layer) */
 #site-title {
   position: absolute;
   top: 46px;
   left: 34px;
+  z-index: 2;
   color: #cfcfcf;
   font-size: 220%;
   letter-spacing: 1px;
@@ -374,8 +420,11 @@ a.hbutton:hover, a.hbutton:active {
 .menuinfoL h1 { font-size: 1.6em; }
 .menuinfoL h2 { font-size: 1.35em; }
 .menuinfoL h3 { font-size: 1.1em; }
-.menuinfoL a { color: #a0a0a0; text-decoration: underline; }
-.menuinfoL a:hover { color: #E67300; }
+/* Content links: constant colour, no underline, no state change. */
+.menuinfoL a, .menuinfoL a:visited, .menuinfoL a:hover, .menuinfoL a:active {
+  color: #a0a0a0;
+  text-decoration: none;
+}
 .menuinfoL ul, .menuinfoL ol { padding-left: 18px; }
 .menuinfoL dt { font-weight: bold; color: #9a9a9a; margin-top: 6px; }
 .menuinfoL dd { margin-left: 0; }

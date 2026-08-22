@@ -6,6 +6,11 @@
 
 <body>
 
+<!-- Animated background effect layer — fills the gray page ground behind the
+     wrapper; panels/tiles sit on top and are unaffected. Which effect renders
+     here is set by `background_effect` in _config.yml. -->
+<div id="bg-fx"></div>
+
 <div id="wrapper">
 
     <div id="TopBanner">
@@ -48,6 +53,10 @@
     </div>
 
 </div>
+
+{% if page.background_effect %}{% assign bgfx = page.background_effect %}{% else %}{% assign bgfx = site.background_effect %}{% endif %}
+{% if bgfx %}<script src="{{ '/assets/js/' | append: bgfx | append: '.js' }}" data-target="bg-fx"></script>{% endif %}
+{% if site.banner_effect %}<script src="{{ '/assets/js/' | append: site.banner_effect | append: '.js' }}" data-target="banner-fx-layer"></script>{% endif %}
 
 </body>
 </html>

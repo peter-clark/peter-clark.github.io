@@ -28,7 +28,7 @@
   const GRAPH_MS = 400;           // min ms between graph refreshes
   const MAX_STEPS_PER_FRAME = 8;  // don't jank the page when speed is high
 
-  // Shared DarkMech palette (see engine.js -> SimTheme). Fallback inline so the
+  // Shared site palette (see engine.js -> SimTheme). Fallback inline so the
   // file still runs if the theme object is ever missing.
   const T = window.SimTheme || {};
   const ACCENT = T.accent || '#e67300';

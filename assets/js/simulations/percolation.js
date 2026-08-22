@@ -37,7 +37,7 @@
   const P_GRID = new Float64Array(NP);
   for (let k = 0; k < NP; k++) P_GRID[k] = k / (NP - 1);
 
-  // Shared DarkMech palette (see engine.js -> SimTheme). Fallback inline so the
+  // Shared site palette (see engine.js -> SimTheme). Fallback inline so the
   // file still runs if the theme object is ever missing.
   const T = window.SimTheme || {};
   const ACCENT = T.accent || '#e67300';

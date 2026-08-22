@@ -1,13 +1,22 @@
 # Site Specific Configuration
 name: neocorax
 description: If it can be known, it'd be intolerable not to.
-url: peter-clark.github.io
-author: Peter Clark
+url: https://neocorax.com
+author: neocorax
 timezone: Europe/Madrid
 timezone_short: CET
 
 # Keywords
-keywords: ['seo', 'key', 'words']
+keywords: ['complex systems', 'statistical physics', 'simulations']
+
+# Animated page-background effect.
+# Loads /assets/js/<name>.js, which renders into the #bg-fx layer.
+# Change to another file's name to swap effects, or set to false to disable.
+background_effect: dither
+
+# Banner inset effect (behind the title/subtitle, inside the silver border).
+# Loads /assets/js/<name>.js, which renders into the #banner-fx layer.
+banner_effect: lines
 
 # Analytics (Plausible requires sign-up)
 analytics:
