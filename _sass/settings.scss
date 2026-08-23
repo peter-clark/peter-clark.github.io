@@ -30,6 +30,26 @@ $h-panel-foot:    60px;  // navfooter.jpg
 $h-menu-top:      34px;  // menu_top.jpg
 $h-menu-foot:     56px;  // menu_btm.jpg
 
+/* ---- The panel's inner well --------------------------------
+   The dark recess running down a sidebar panel is drawn across
+   all three slice images, not just the middle one. Measured off
+   the art:
+
+     navtop.jpg     the well's top cap starts at y46, so it
+                    reaches $well-cap-top up into the head plate
+     nav_filler.gif the flat field spans x14..x158
+     navfooter.jpg  the bottom cap ends at y25, so the well
+                    reaches $well-cap-bottom down into the foot
+
+   Content that should sit flush inside the well therefore has
+   to be pulled up and down by these amounts — the .navbody box
+   alone is shorter than the well it appears to sit in.
+   ------------------------------------------------------------ */
+$well-width:     145px;
+$well-radius:      6px;
+$well-cap-top:    22px;
+$well-cap-bottom: 25px;
+
 /* Gap between stacked panels */
 $gap-panel:       15px;
 

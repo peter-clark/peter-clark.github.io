@@ -60,7 +60,11 @@
   font-size: 9px;      // matches the banner nav buttons
 }
 
-/* ---- Body ---- */
+/* ---- Body ----
+   overflow stays visible: the well continues into the head and
+   foot plates, so tiles are pulled outside this box to sit flush
+   in it (see $well-cap-top / $well-cap-bottom below). Clipping
+   is done by .navbox instead. */
 .navbody {
   background-image: url("#{$theme-img}/nav_filler.gif");
   background-repeat: repeat-y;
@@ -70,7 +74,7 @@
   width: $w-panel;
   height: 100%;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 
 /* ---- Foot plate ---- */
@@ -155,35 +159,172 @@
 }
 
 /* ---- type: image -------------------------------------------
-   For stills and gifs. The image scales to the panel's inner
-   width and keeps its aspect ratio, so any source size works.
-   A caption is optional.
+   A tile for stills and gifs.
+
+   GEOMETRY. The tile is cut to the same rounded rectangle as
+   the well it sits in, on all four sides — $well-width and
+   $well-radius for the shape, $well-cap-top / $well-cap-bottom
+   for the vertical seating. All four are measured off the art
+   and defined in settings.scss.
+
+   Because the corners are a real clip (overflow: hidden on the
+   tile), animated gifs are cut to the shape too. That is the
+   fix for content spilling past the rounded frame.
    ------------------------------------------------------------ */
+$tile-inset:   5px;  // how much of the well shows around the tile
+$tile-radius: 12px;  // tile rounding — deliberately softer than the well
+$tile-fade:  0.28s;  // hover crossfade
+
 .panel-media {
   margin: 0 auto;
-  padding: 4px 0 6px;
-  width: 150px;
+  padding: 0;
+  width: $well-width - 2 * $tile-inset;
   position: relative;
+  z-index: 1;  // paints over the foot plate when pulled into it
+}
+
+/* Seat the tile flush in the well.
+
+   The well is taller than .navbody: it starts $well-cap-top up
+   inside the head plate and ends $well-cap-bottom down inside
+   the foot plate. Without these pulls the tile floats in the
+   middle with a band of empty recess above and below it, even
+   though it is flush at the sides.
+
+   Only applied when the tile is the first / last thing in the
+   panel — a tile with a caption, or with text stacked under it,
+   should not be jammed against the caps. */
+.navbody > .panel-media:first-child {
+  margin-top: -($well-cap-top - $tile-inset);
+}
+
+.navbody > .panel-media:last-child:not(:has(.panel-caption)) {
+  margin-bottom: -($well-cap-bottom - $tile-inset);
+}
+
+/* The clipping box. Everything inside is cut to the rounded
+   rectangle; nothing can paint outside it. */
+.panel-tile {
+  display: block;
+  position: relative;
+  width: 100%;
+  border-radius: $tile-radius;
+  overflow: hidden;
+  background: $c-inset;
+  box-shadow: inset 0 0 0 1px #000;  // the rim itself
 
   img {
     display: block;
     width: 100%;
     height: auto;
-    border: 1px solid #000;
-    background: $c-inset;
-    image-rendering: auto;
+    position: relative;
+    z-index: 1;
+    transition: opacity $tile-fade ease;
   }
 
-  /* Pixel art and small gifs look better upscaled hard than blurred.
-     Add `pixelated: true` to the panel in the YAML to get this. */
-  &.is-pixelated img {
-    image-rendering: pixelated;
+  /* Depth pass — one static layer painted over the tile, to read
+     as art sitting down inside the panel rather than pasted on.
+
+     Everything is gradient layers on a single `background`, in
+     place of the earlier gradient + box-shadow pair. Both were
+     cheap, but this way the browser rasterises the whole effect
+     into one texture once and simply re-blends it as the gif
+     animates underneath — nothing here is ever recomputed.
+
+     Layer order, top to bottom:
+       1  edge falloff, heavier at the top where a rim would cast
+       2  side falloff
+       3  radial vignette, off-centre towards the top so it
+          agrees with the top-down lighting in the plate art
+
+     pointer-events: none keeps it from swallowing the hover. */
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    border-radius: inherit;
+    background:
+      linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.85) 0,
+        rgba(0, 0, 0, 0) 9px,
+        rgba(0, 0, 0, 0) calc(100% - 7px),
+        rgba(0, 0, 0, 0.5) 100%
+      ),
+      linear-gradient(
+        to right,
+        rgba(0, 0, 0, 0.65) 0,
+        rgba(0, 0, 0, 0) 8px,
+        rgba(0, 0, 0, 0) calc(100% - 8px),
+        rgba(0, 0, 0, 0.65) 100%
+      ),
+      radial-gradient(
+        125% 125% at 50% 38%,
+        rgba(0, 0, 0, 0) 42%,
+        rgba(0, 0, 0, 0.28) 76%,
+        rgba(0, 0, 0, 0.62) 100%
+      );
+  }
+}
+
+/* Pixel art and small lattice gifs look better upscaled hard than
+   blurred. Add `pixelated: true` to the panel in the YAML. */
+.panel-media.is-pixelated .panel-tile img {
+  image-rendering: pixelated;
+}
+
+/* ---- reveal-on-hover ---------------------------------------
+   `reveal: true` on a panel that has both an image and text.
+   The text sits underneath the image inside the tile; hovering
+   fades the image out and the text in, in orange. The tile is a
+   fixed box, so the panel never changes height.
+   ------------------------------------------------------------ */
+.panel-media.is-reveal {
+  .panel-tile {
+    /* A tile with text under it needs a definite height. Default
+       to square; override per panel with `ratio: "4 / 3"`. */
+    aspect-ratio: var(--panel-tile-ratio, 1 / 1);
   }
 
-  /* Link-wrapped images get the same orange feedback as menu links. */
-  a:hover img {
-    border-color: $c-accent;
+  .panel-tile img {
+    height: 100%;
+    object-fit: cover;
   }
+
+  .panel-reveal {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 10px;
+    color: $c-accent;
+    text-align: center;
+    line-height: 1.5;
+    opacity: 0;
+    transition: opacity $tile-fade ease;
+  }
+
+  /* Fade the gif out first, then bring the text up behind it. */
+  &:hover,
+  &:focus-within {
+    .panel-tile img { opacity: 0; }
+
+    .panel-reveal {
+      opacity: 1;
+      transition-delay: $tile-fade * 0.5;
+    }
+  }
+}
+
+/* A linked tile gets the same orange feedback as a menu link.
+   Only the rim changes; the depth pass in ::after is untouched,
+   so the tile stays recessed while lit. */
+a.panel-tile:hover {
+  box-shadow: inset 0 0 0 1px $c-accent;
 }
 
 .panel-caption {
@@ -192,6 +333,18 @@
   color: $c-text-dim;
   text-align: center;
   line-height: 1.4;
+}
+
+/* Small grey line under a link — post dates, venues. */
+.panel-meta {
+  display: block;
+  color: $c-text-dim;
+  line-height: 1.3;
+}
+
+.panel-empty {
+  color: $c-text-dim;
+  font-style: italic;
 }
 
 /* ---- type: embed -------------------------------------------

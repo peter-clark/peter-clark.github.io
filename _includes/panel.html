@@ -28,22 +28,49 @@ Usage:  {% include panel.html panel=item %}
 
     <div class="navbody">
 
-        {% comment %} --- image / gif --- {% endcomment %}
+        {% comment %} --- image / gif ---
+             `reveal: true` turns the image into a tile that fades on
+             hover to show the panel's text underneath, in orange. The
+             tile keeps a fixed size either way, so nothing shifts. {% endcomment %}
         {% if p.image %}
-        <div class="panel-media{% if p.pixelated %} is-pixelated{% endif %}">
-            {% if p.image_link %}<a href="{{ p.image_link }}">{% endif %}
-            <img src="{{ p.image | relative_url }}" alt="{{ p.alt | default: p.title }}"
-                 {% if p.width %}width="{{ p.width }}"{% endif %}
-                 {% if p.height %}height="{{ p.height }}"{% endif %} />
-            {% if p.image_link %}</a>{% endif %}
+        {% assign tile_link = p.image_link | default: p.link %}
+        <div class="panel-media{% if p.pixelated %} is-pixelated{% endif %}{% if p.reveal and p.text %} is-reveal{% endif %}"
+             {% if p.ratio %}style="--panel-tile-ratio: {{ p.ratio }};"{% endif %}>
+            {% if tile_link %}<a class="panel-tile" href="{{ tile_link }}">{% else %}<span class="panel-tile">{% endif %}
+                {% if p.reveal and p.text %}
+                <span class="panel-reveal">{{ p.text }}</span>
+                {% endif %}
+                <img src="{{ p.image | relative_url }}" alt="{{ p.alt | default: p.title }}"
+                     {% if p.width %}width="{{ p.width }}"{% endif %}
+                     {% if p.height %}height="{{ p.height }}"{% endif %} />
+            {% if tile_link %}</a>{% else %}</span>{% endif %}
             {% if p.caption %}<span class="panel-caption">{{ p.caption }}</span>{% endif %}
         </div>
         {% endif %}
 
-        {% comment %} --- paragraph(s) of copy --- {% endcomment %}
-        {% if p.text %}
+        {% comment %} --- paragraph(s) of copy ---
+             Skipped when the text is already being used as the tile's
+             hover reveal above. {% endcomment %}
+        {% if p.text and p.reveal != true %}
         <div class="navinfoL">
             <p>{{ p.text }}</p>
+        </div>
+        {% endif %}
+
+        {% comment %} --- recent posts ---
+             `posts: 5` lists the five most recent entries from _posts. {% endcomment %}
+        {% if p.posts %}
+        <div class="navlinks">
+            <ul>
+                {% for post in site.posts limit: p.posts %}
+                <li>
+                    <a href="{{ post.url }}">{{ post.title }}</a>
+                    <span class="panel-meta">{{ post.date | date: "%d %b %Y" }}</span>
+                </li>
+                {% else %}
+                <li class="panel-empty">Nothing posted yet.</li>
+                {% endfor %}
+            </ul>
         </div>
         {% endif %}
 
@@ -52,7 +79,8 @@ Usage:  {% include panel.html panel=item %}
         <div class="navlinks">
             <ul>
                 {% for l in p.links %}
-                <li><a href="{{ l.url }}">{{ l.name }}</a></li>
+                <li><a href="{{ l.url }}"{% if l.url contains "://" %} target="_blank" rel="noopener"{% endif %}>{{ l.name }}</a>{% if l.meta %}
+                    <span class="panel-meta">{{ l.meta }}</span>{% endif %}</li>
                 {% endfor %}
             </ul>
         </div>

@@ -16,39 +16,56 @@
 #   link:       makes the title button clickable, e.g. /works/
 #
 #   image:      a png / jpg / gif, e.g. /assets/images/panels/x.gif
+#               Shown as a tile clipped to the same rounded
+#               rectangle as the panel's inner well.
 #   alt:        description of the image for screen readers
-#   caption:    small grey text underneath the image
-#   image_link: makes the image clickable
+#   caption:    small grey text underneath the tile
+#   image_link: makes the tile link somewhere other than `link`
 #   pixelated:  true  -> crisp upscaling, good for pixel art and
 #                        small simulation gifs (default is smooth)
+#   reveal:     true  -> hovering the tile fades the image out and
+#                        shows this panel's `text` underneath it,
+#                        in orange. The tile keeps its size, so
+#                        the panel never jumps.
+#   ratio:      shape of the tile, e.g. "4 / 3". Default is square.
 #
-#   text:       a paragraph of copy
+#   text:       a paragraph of copy. Shown under the panel normally,
+#               or inside the tile when `reveal: true`.
 #
-#   links:      a list of links, each with a name and a url
+#   links:      a list of links, each with a name, a url, and an
+#               optional meta line of small grey text
+#
+#   posts:      a number -> list that many recent entries from _posts
 #
 #   embed:      a URL to put in an iframe (video, widget)
-#   ratio:      aspect ratio for the embed, e.g. "16 / 9"
 #
 #   html:       raw HTML, for anything the keys above miss
 #
-# You can combine them. If a panel has both an image and text,
-# the image renders first, then the text, then any links.
+# You can combine them. Blocks render in this order: image,
+# text, posts, links, embed, html.
 # ============================================================
 
 - title: Research & Other Work
   link: /works/
   links:
-    - name: Link
-      url: "#"
-    - name: Link
-      url: "#"
-    - name: Link
-      url: "#"
-    - name: Link
-      url: "#"
+    - name: Tapping into Rhythm
+      meta: Music & Science, 2026
+      url: https://doi.org/10.1177/20592043261466428
+    - name: Motivation & Working Memory
+      meta: BSc thesis, RUG, 2021
+      url: https://github.com/peter-clark/research-papers/blob/main/Effect_of_External_Motivation_on_Action_Selection_in_Working_Memory_Tasks/Effect_of_External_Motivation_on_Action_Selection_in_Working_Memory_Tasks.pdf
+    - name: Consciousness in Animals
+      meta: BA thesis, RUG, 2021
+      url: https://github.com/peter-clark/research-papers/blob/main/Consciousness_In_NonHuman_Animals/Consciousness_In_NonHuman_Animals.pdf
+
+- title: Posts
+  posts: 5
 
 - title: Percolation
   link: /simulations/percolation/
+  image: /assets/images/panels/percolation_tile.gif
+  reveal: true
+  pixelated: true
   text: >
     Demonstration of critical threshold for site percolation
     on a 2D lattice.
