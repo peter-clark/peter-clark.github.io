@@ -1,0 +1,25 @@
+@charset "utf-8";
+
+/* ============================================================
+   SITE FOOTER — three columns positioned on footer.jpg.
+   Content is _includes/footer.html.
+   ============================================================ */
+
+.FTcol1,
+.FTcol2,
+.FTcol3 {
+  padding: 2px;
+  color: $c-text;
+  font-weight: normal;
+  text-decoration: none;
+  text-align: center;
+  height: 104px;
+  position: absolute;
+  float: left;
+  overflow: hidden;
+  margin-top: 20px;
+}
+
+.FTcol1 { width: 162px; margin-left: 17px; }
+.FTcol2 { width: 162px; margin-left: 208px; }
+.FTcol3 { width: 316px; margin-left: 658px; }

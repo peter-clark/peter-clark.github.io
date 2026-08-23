@@ -1,9 +1,44 @@
 ---
+# Empty front matter: tells Jekyll to run this file through Sass.
 ---
 
 @charset "utf-8";
 
+/* ============================================================
+   STYLESHEET MANIFEST
+   This file only lists partials — no rules of its own. Order
+   matters: settings first, then progressively more specific
+   layers, so later files can override earlier ones.
+
+   _sass/
+     settings          shared widths, colours, type, asset paths
+     base/             element defaults and prose
+     layout/           the page frame and effect layers
+     components/       one file per reusable piece of UI
+     utilities         single-purpose helper classes
+
+   To add a component: drop the file in _sass/components/ and
+   add one line to the components block below.
+   ============================================================ */
+
+@import "settings";
+
 @import
-"reset",
-"theme"
-;
+  "base/reset",
+  "base/typography";
+
+@import
+  "layout/frame",
+  "layout/effects";
+
+/* button must come before anything that `@extend .btn3d` */
+@import
+  "components/button",
+  "components/nav",
+  "components/panel",
+  "components/menubox",
+  "components/simulation",
+  "components/site-footer",
+  "components/blog";
+
+@import "utilities";

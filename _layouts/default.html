@@ -22,12 +22,14 @@
     <div id="bodyfill">
         <div id="content">
 
+            {% comment %} Panels are defined in _data/sidebar-left.yml and
+                 _data/sidebar-right.yml — edit those, not this file. {% endcomment %}
             <div id="COL-left">
-                {% include sidebar-left.html %}
+                {% include sidebar.html data="sidebar-left" %}
             </div>
 
             <div id="COL-right">
-                {% include sidebar-right.html %}
+                {% include sidebar.html data="sidebar-right" %}
             </div>
 
             <div id="COL-center">

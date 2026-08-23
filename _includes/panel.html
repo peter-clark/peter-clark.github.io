@@ -1,0 +1,81 @@
+{% comment %}
+============================================================
+PANEL — renders one sidebar box from a _data entry.
+
+You should not need to edit this file to add a panel. Add an
+entry to _data/sidebar-left.yml or _data/sidebar-right.yml
+instead; the keys are documented at the top of those files.
+
+Blocks render in this order, and each one is skipped if the
+key is absent: image -> text -> links -> embed -> html.
+
+Usage:  {% include panel.html panel=item %}
+============================================================
+{% endcomment %}
+
+{% assign p = include.panel %}
+
+<div class="navbox">
+
+    {% comment %} --- Head plate with the title button --- {% endcomment %}
+    <div class="navhead">
+        {% if p.link %}
+        <a href="{{ p.link }}">{{ p.title }}</a>
+        {% else %}
+        <span class="navbtn">{{ p.title }}</span>
+        {% endif %}
+    </div>
+
+    <div class="navbody">
+
+        {% comment %} --- image / gif --- {% endcomment %}
+        {% if p.image %}
+        <div class="panel-media{% if p.pixelated %} is-pixelated{% endif %}">
+            {% if p.image_link %}<a href="{{ p.image_link }}">{% endif %}
+            <img src="{{ p.image | relative_url }}" alt="{{ p.alt | default: p.title }}"
+                 {% if p.width %}width="{{ p.width }}"{% endif %}
+                 {% if p.height %}height="{{ p.height }}"{% endif %} />
+            {% if p.image_link %}</a>{% endif %}
+            {% if p.caption %}<span class="panel-caption">{{ p.caption }}</span>{% endif %}
+        </div>
+        {% endif %}
+
+        {% comment %} --- paragraph(s) of copy --- {% endcomment %}
+        {% if p.text %}
+        <div class="navinfoL">
+            <p>{{ p.text }}</p>
+        </div>
+        {% endif %}
+
+        {% comment %} --- list of links --- {% endcomment %}
+        {% if p.links %}
+        <div class="navlinks">
+            <ul>
+                {% for l in p.links %}
+                <li><a href="{{ l.url }}">{{ l.name }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        {% comment %} --- iframe / video embed --- {% endcomment %}
+        {% if p.embed %}
+        <div class="panel-embed">
+            <div class="panel-embed-frame" {% if p.ratio %}style="aspect-ratio: {{ p.ratio }};"{% endif %}>
+                <iframe src="{{ p.embed }}" title="{{ p.title }}" loading="lazy"
+                        allowfullscreen></iframe>
+            </div>
+            {% if p.caption and p.image == nil %}<span class="panel-caption">{{ p.caption }}</span>{% endif %}
+        </div>
+        {% endif %}
+
+        {% comment %} --- raw HTML escape hatch, for anything the
+                          keys above don't cover --- {% endcomment %}
+        {% if p.html %}
+        <div class="navinfoL">{{ p.html }}</div>
+        {% endif %}
+
+    </div>
+
+    <div class="navfooter"></div>
+</div>

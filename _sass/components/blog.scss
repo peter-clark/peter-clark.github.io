@@ -1,0 +1,55 @@
+@charset "utf-8";
+
+/* ============================================================
+   BLOG — post listings and single posts.
+
+   Nothing on the site uses these yet: the sample posts were
+   removed, but the machinery (_layouts/post.html,
+   _layouts/autopage_category.html, the pagination config) is
+   kept so a category folder of _posts starts working with no
+   further setup.
+   ============================================================ */
+
+.post-info {
+  padding-top: 20px;
+  padding-bottom: 30px;
+  margin: 20px 0 5px;
+
+  h2 {
+    color: $c-heading;
+    font-weight: bold;
+  }
+
+  p { color: $c-text-dim; }
+}
+
+.post-content {
+  padding-bottom: 20px;
+}
+
+.post-summary {
+  padding-top: 10px;
+}
+
+.post-item {
+  display: block;
+  position: relative;
+  line-height: 24px;
+  padding-bottom: 5px;
+  color: $c-text;
+
+  a { color: $c-link; }
+  a:hover { color: $c-accent; }
+}
+
+.post-nav {
+  padding: 20px 0;
+
+  a { color: $c-link; }
+  a:hover { color: $c-accent; }
+}
+
+.category-summary {
+  padding-top: 30px;
+  padding-bottom: 30px;
+}

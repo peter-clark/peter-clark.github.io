@@ -1,0 +1,86 @@
+@charset "utf-8";
+
+/* ============================================================
+   MENUBOX — the centre content box.
+
+   Markup (see _layouts/default.html):
+
+     .menubox
+       .menutop      top cap
+       .menufill     repeating filler
+         .menutitle  page title
+         .menuinfoL  page content (prose styled in base/typography)
+       .menufoot     bottom cap
+
+   Same construction as a sidebar panel, cut to $w-centre.
+   ============================================================ */
+
+.menubox {
+  padding: 0;
+  margin: 2px 0 0 0;
+  width: $w-centre;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.menutop,
+.menufill,
+.menufoot {
+  background-repeat: no-repeat;
+  background-position: center;
+  padding: 0;
+  margin: 0;
+  width: $w-centre;
+  position: relative;
+  overflow: hidden;
+}
+
+.menutop {
+  background-image: url("#{$theme-img}/menu_top.jpg");
+  height: $h-menu-top;
+}
+
+.menufill {
+  background-image: url("#{$theme-img}/menu_filler.gif");
+  background-repeat: repeat-y;
+  height: 100%;
+}
+
+.menufoot {
+  background-image: url("#{$theme-img}/menu_btm.jpg");
+  height: $h-menu-foot;
+  margin-bottom: $gap-panel;
+}
+
+/* ---- Content wells inside the box ---- */
+.menuinfoC,
+.menuinfoL {
+  font-weight: normal;
+  color: $c-text;
+  text-decoration: none;
+  text-indent: 0;
+  padding: 0;
+  margin: 0 auto;
+  position: relative;
+  width: 570px;
+  height: 100%;
+  overflow: hidden;
+}
+
+.menuinfoC { text-align: center; }
+.menuinfoL { text-align: left; }
+
+.menutitle {
+  text-decoration: none;
+  font-weight: bold;
+  color: $c-heading-alt;
+  text-align: center;
+  text-indent: 0;
+  padding: 0;
+  margin: 0 auto 8px auto;
+  width: 500px;
+  height: 18px;
+  position: relative;
+  overflow: hidden;
+}

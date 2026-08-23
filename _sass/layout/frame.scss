@@ -1,0 +1,109 @@
+@charset "utf-8";
+
+/* ============================================================
+   LAYOUT — the page frame and the three columns.
+
+   Structure (see _layouts/default.html):
+
+     #wrapper
+       #TopBanner      banner art + title + nav
+       #bodytop        top cap of the body panel
+       #bodyfill  >  #content  >  #COL-left / #COL-center / #COL-right
+       #bodybottom     bottom cap of the body panel
+       #footer
+
+   The caps and fillers are still slice images cut to $w-wrapper.
+   They are the next thing to move to CSS; when they do, only
+   this file and settings.scss need to change.
+   ============================================================ */
+
+#wrapper {
+  background-image: url("#{$theme-img}/bdyfiller.gif");
+  background-repeat: repeat-y;
+  margin: 0 auto;
+  padding: 0;
+  width: $w-wrapper;
+  height: 100%;
+  position: relative;
+  z-index: 1; // above the background effect layer
+  overflow: hidden;
+}
+
+/* ---- Banner ---- */
+#TopBanner {
+  background-image: url("#{$theme-img}/TopBanner3.jpg");
+  background-repeat: no-repeat;
+  background-position: center top;
+  padding: 0;
+  margin: 0;
+  width: $w-wrapper;
+  height: $h-banner;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ---- Body panel caps and filler ---- */
+#bodytop,
+#bodyfill,
+#bodybottom,
+#footer {
+  padding: 0;
+  margin: 0;
+  width: $w-wrapper;
+  position: relative;
+  overflow: hidden;
+  background-repeat: no-repeat;
+}
+
+#bodytop {
+  background-image: url("#{$theme-img}/bodyfillertop.jpg");
+  height: $h-bodytop;
+}
+
+#bodyfill {
+  height: 100%;
+}
+
+#bodybottom {
+  background-image: url("#{$theme-img}/bodyfillerbtm.jpg");
+  height: $h-bodybottom;
+}
+
+#footer {
+  background-image: url("#{$theme-img}/footer.jpg");
+  height: $h-footer;
+}
+
+#content {
+  padding: 0;
+  margin: 0 auto;
+  position: relative;
+  width: $w-content;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ---- Columns ---- */
+#COL-left,
+#COL-right,
+#COL-center {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+}
+
+#COL-left {
+  width: $w-panel;
+  float: left;
+}
+
+#COL-right {
+  width: $w-panel;
+  float: right;
+}
+
+#COL-center {
+  width: $w-centre;
+}

@@ -22,10 +22,10 @@
   var strokeColor = '#808080';       // line colour
   var backgroundColor = '#11111';   // solid gray ground
   var count = 100;                    // line density (1-100)
-  var movement = 6;                 // drift speed
+  var movement = 10;                 // drift speed
   var hover = true;                  // react to the cursor
   var force = 1;                     // cursor influence strength
-  var resolution = 1;                // line length
+  var resolution = 2;                // line length
   var BASE_ANGLE = 0;
   var CURL = 10;
   var SEED = 0.5;

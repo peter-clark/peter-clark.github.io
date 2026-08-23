@@ -1,0 +1,112 @@
+@charset "utf-8";
+
+/* ============================================================
+   BASE — document defaults and prose.
+   Anything that styles a bare HTML element belongs here.
+   Component-specific type lives with its component.
+   ============================================================ */
+
+/* The frame's many height:100% rules are meant to collapse to content
+   height. The CSS reset forces html/body to 100% (viewport), which would
+   blow every box up to full-screen — keep them auto. */
+html,
+body {
+  height: auto;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  background-color: $c-page;
+  overflow: auto;
+  font-family: $font-body;
+  font-size: $fs-body;
+}
+
+p {
+  padding: 2px;
+  margin: 4px 0;
+}
+
+/* LINKS
+   Text links inherit the surrounding colour and never underline or change
+   on hover/visit. Interactive elements (nav buttons, panel titles) opt into
+   hover styling with their own rules — see components/button.scss. */
+a,
+a:link,
+a:visited,
+a:hover,
+a:active {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ---- Prose inside the centre content box -------------------
+   Scoped to .menuinfoL so page copy is styled without leaking
+   into panel or control markup.
+   ------------------------------------------------------------ */
+.menuinfoL {
+  h1,
+  h2,
+  h3 {
+    color: $c-heading;
+    font-weight: bold;
+    margin: 10px 0 6px 0;
+  }
+
+  h1 { font-size: 1.6em; }
+  h2 { font-size: 1.35em; }
+  h3 { font-size: 1.1em; }
+
+  a,
+  a:visited,
+  a:hover,
+  a:active {
+    color: $c-link;
+    text-decoration: none;
+  }
+
+  ul,
+  ol { padding-left: 18px; }
+
+  dt {
+    font-weight: bold;
+    color: $c-heading-alt;
+    margin-top: 6px;
+  }
+
+  dd { margin-left: 0; }
+
+  code {
+    background: #000;
+    color: $c-accent;
+    padding: 1px 4px;
+  }
+}
+
+/* ---- Shared list patterns ----------------------------------
+   A row per item with a hairline separator: used by the
+   simulations gallery and the research/link lists.
+   ------------------------------------------------------------ */
+.sim-list,
+.link-list {
+  list-style: none;
+  margin: 0;
+  padding-left: 0;
+
+  li {
+    padding: 7px 0;
+    border-bottom: 1px solid $c-rule;
+
+    &:last-child { border-bottom: 0; }
+  }
+}
+
+.sim-list a { font-weight: bold; }
+
+.sim-list .desc,
+.link-list .meta {
+  color: $c-text-dim;
+}
+
+.sim-list .desc { display: block; }

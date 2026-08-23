@@ -941,12 +941,12 @@ const DitheringTypes = { random: 1, "2x2": 2, "4x4": 3, "8x8": 4 };
 
   /* ===================== SETTINGS (component defaults) ===================== */
   var DEFAULTS = {
-    background: "#1D2128",                         // fill colour behind the dots
-    colors: ["#4a4b4b", "#8f8f8f", "#d0d0d0"],    // dither palette
+    background: "#070707",                         // fill colour behind the dots
+    colors: ["#3f3f3f", "#515151", "#aeaeae"],    // dither palette
     //colors: ["#249D8F", "#E9C46A", "#E76F51"],    // dither palette
-    size: 14,          // dot/block size (÷10 -> u_pxSize)
-    density: 60,       // 0–100
-    speed: 12,         // 1–100
+    size: 15,          // dot/block size (÷10 -> u_pxSize)
+    density: 25,       // 0–100
+    speed: 6,         // 1–100
     scale: 25,         // 1–200 (noise scale)
     hover: false,       // cursor "hole" interaction
     hoverRadius: 250

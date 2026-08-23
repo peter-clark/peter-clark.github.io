@@ -1,0 +1,61 @@
+@charset "utf-8";
+
+/* ============================================================
+   EFFECT LAYERS — the two animated canvases and the banner title.
+
+   Which script renders into each is set in _config.yml:
+     background_effect  ->  #bg-fx
+     banner_effect      ->  #banner-fx-layer
+   Scripts live in assets/js/ and are wired up by data-target.
+   ============================================================ */
+
+/* Fills the whole viewport behind the wrapper, so only the page
+   ground around the frame shows the effect. */
+#bg-fx {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+}
+
+/* Sized to the glossy inset of TopBanner3.jpg so it sits inside the
+   silver border, behind the title. Rounded to match the inset's
+   corners. (Inset measured at left 12 / top 20 / right 977 / bottom
+   ~178 within the 990x233 banner.) */
+#banner-fx {
+  position: absolute;
+  top: 40px;
+  left: 30px;
+  right: 16px;
+  height: 128px;
+  width: 930px;
+  border-radius: 13px;
+  overflow: hidden; // clips the larger effect layer inside
+  z-index: 0;
+}
+
+/* Larger than its clip box on every side, so the animated pattern
+   extends past the visible edges and gets clipped — no hard edge is
+   visible as the pattern moves. */
+#banner-fx-layer {
+  position: absolute;
+  inset: -60px;
+}
+
+/* Banner title / logo, overlaid on the banner inset above the effect. */
+#site-title {
+  position: absolute;
+  top: 46px;
+  left: 34px;
+  z-index: 2;
+  color: $c-text-bright;
+  font-size: 220%;
+  letter-spacing: 1px;
+
+  .sub {
+    display: block;
+    font-size: 42%;
+    font-style: italic;
+    color: #7a7a7a;
+    margin-top: 2px;
+  }
+}

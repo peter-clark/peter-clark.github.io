@@ -1,0 +1,184 @@
+@charset "utf-8";
+
+/* ============================================================
+   BUTTON — the single button in the design, at any size.
+
+   Every button on the site is .btn3d: the banner nav bar
+   (components/nav.scss), the sidebar panel titles (below), and
+   the simulation controls (components/simulation.scss).
+
+   It replaces butnoverclick.png, a 90x64 two-state sprite that
+   drew an 88x30 button twice — dark at rest on top, orange on
+   hover below. Being a fixed-size bitmap, it only rendered
+   correctly at exactly 90px wide. The sidebar titles stretched
+   it to 144px, which smeared the bevel and the rounded face
+   into a flat grey slab: the button stopped reading as a
+   button, and it overhung the plate recess it was meant to sit
+   in.
+
+   These rules rebuild that sprite as gradients, so it stays
+   crisp at any width. Colours sampled from the original PNG:
+
+     row  0        #2f2f2f            outer rim
+     rows 1-4      #161616 -> #0b0b0b dark bezel
+     rows 5-16     gloss, peaks row 11
+                     rest   #111111 -> #313131 -> #2d2d2d
+                     orange #e17408 -> #ff9a35 -> #fc8f21
+     rows 17-26    lower face, hard step at row 17
+                     rest   #101010 -> #020202
+                     orange #f77c00 -> #6d3905
+     rows 27-29    #191919 -> #2e2e2e bottom rim
+
+   Geometry (88x30 reference): outer rect radius 6px; the face
+   is inset 4px / 4px / 4px / 2px with radius 5px.
+
+   The face is an absolutely-positioned ::before at z-index -1.
+   `isolation: isolate` keeps that negative layer inside the
+   button, so it paints over the bezel but under the label.
+   ============================================================ */
+
+/* ---- Sprite-sampled palette ---- */
+$btn-rim:         #2f2f2f;
+$btn-bezel-top:   #161616;
+$btn-bezel:       #0b0b0b;
+$btn-bezel-lo:    #191919;
+$btn-bezel-lo2:   #252525;
+
+$btn-text:        $c-text;
+$btn-text-hot:    #fff5e8;
+
+/* Face gradient. Stop offsets are the sprite's row positions
+   expressed as a fraction of face height, so the bevel keeps its
+   proportions at any button size. */
+@mixin btn-face($top, $gloss, $mid, $step, $lo1, $lo2, $lo3, $bottom) {
+  background-image:
+    linear-gradient(
+      to right,
+      rgba(0, 0, 0, 0.62) 0,
+      rgba(0, 0, 0, 0) 5px,
+      rgba(0, 0, 0, 0) calc(100% - 5px),
+      rgba(0, 0, 0, 0.62) 100%
+    ),
+    linear-gradient(
+      to bottom,
+      $top 0%,
+      $gloss 28.6%,
+      $mid 52.4%,
+      $step 57.1%,
+      $lo1 66.7%,
+      $lo2 76.2%,
+      $lo3 85.7%,
+      $bottom 100%
+    );
+}
+
+@mixin btn-face-rest {
+  @include btn-face(
+    #111111, #313131, #2d2d2d, #101010,
+    #0d0d0d, #0a0a0a, #060606, #020202
+  );
+}
+
+@mixin btn-face-hot {
+  @include btn-face(
+    #e17408, #ff9a35, #fc8f21, #f77c00,
+    #e37200, #bf6001, #8f4903, #6d3905
+  );
+}
+
+@mixin btn-face-hit {
+  @include btn-face(
+    #b85d05, #d9791a, #d47615, #c86200,
+    #b85c00, #994c01, #723a02, #572d04
+  );
+}
+
+/* ---- Base button ------------------------------------------- */
+.btn3d {
+  position: relative;
+  isolation: isolate;
+
+  display: block;
+  box-sizing: border-box;
+  padding: 4px 8px 2px;
+  line-height: 1;
+  border: 1px solid $btn-rim;
+  border-radius: 6px;
+  margin: 0;
+
+  /* the bezel the face sits in */
+  background-color: $btn-bezel;
+  background-image: linear-gradient(
+    to bottom,
+    $btn-bezel-top 0,
+    $btn-bezel-top 1px,
+    $btn-bezel 4px,
+    $btn-bezel calc(100% - 4px),
+    $btn-bezel-lo calc(100% - 3px),
+    $btn-bezel-lo2 calc(100% - 1px),
+    $btn-rim 100%
+  );
+
+  font-family: Verdana, Geneva, sans-serif;
+  font-weight: bold;
+  color: $btn-text;
+  text-align: center;
+  text-decoration: none;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.8);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-appearance: none;
+  appearance: none;
+  transition: color 0.1s linear;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    right: 3px;
+    bottom: 1px;
+    z-index: -1;
+    border-radius: 5px;
+    @include btn-face-rest;
+  }
+
+  &:hover,
+  &:focus {
+    color: $btn-text-hot;
+    text-decoration: none;
+    outline: none;
+  }
+
+  &:hover::before,
+  &:focus::before {
+    @include btn-face-hot;
+  }
+
+  &:active {
+    color: $btn-text-hot;
+  }
+
+  &:active::before {
+    @include btn-face-hit;
+    top: 4px;
+    bottom: 0;
+  }
+}
+
+/* ------------------------------------------------------------
+   SIZING VARIANTS live with their component, each one a
+   `@extend .btn3d` plus a width/height/font-size:
+
+     banner nav bar      components/nav.scss        a.hbutton
+     sidebar box title   components/panel.scss      .navhead > a
+     simulation control  components/simulation.scss .sim-controls button
+
+   To add a button anywhere else, do the same — never restyle
+   the bevel, only the box.
+   ------------------------------------------------------------ */

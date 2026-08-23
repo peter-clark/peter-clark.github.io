@@ -1,0 +1,59 @@
+@charset "utf-8";
+
+/* ============================================================
+   SETTINGS — every shared value lives here.
+   Change a width or a colour once and the whole site follows.
+   No CSS is emitted by this file; it is variables only.
+   ============================================================ */
+
+/* ---- Layout widths -----------------------------------------
+   The page is a fixed-width frame:
+     $w-wrapper = $w-panel + $w-centre + $w-panel + gutters
+   The bitmap frame images are cut to these widths, so don't
+   change them until the frame is CSS (see components/panel.scss
+   and components/menubox.scss).
+   ------------------------------------------------------------ */
+$w-wrapper:      990px;  // whole page frame
+$w-content:      960px;  // inner content strip
+$w-panel:        172px;  // one sidebar column / panel
+$w-centre:       616px;  // centre content column
+
+/* Vertical pieces of the frame (heights of the slice images) */
+$h-banner:       233px;
+$h-bodytop:       25px;
+$h-bodybottom:    31px;
+$h-footer:       162px;
+
+/* Panel chrome heights */
+$h-panel-head:    68px;  // navtop.jpg
+$h-panel-foot:    60px;  // navfooter.jpg
+$h-menu-top:      34px;  // menu_top.jpg
+$h-menu-foot:     56px;  // menu_btm.jpg
+
+/* Gap between stacked panels */
+$gap-panel:       15px;
+
+/* ---- Colours -----------------------------------------------
+   Sampled from the theme art so CSS and bitmaps stay in step.
+   ------------------------------------------------------------ */
+$c-page:         #383838;  // ground behind the frame
+$c-text:         #808080;  // default body / panel text
+$c-text-dim:     #6f6f6f;  // captions, meta, descriptions
+$c-text-bright:  #cfcfcf;  // banner title
+$c-heading:      #b0b0b0;  // headings inside content boxes
+$c-heading-alt:  #999999;  // centre box title
+$c-link:         #a0a0a0;  // prose links
+$c-accent:       #e67300;  // theme orange (hover, highlights)
+$c-rule:         #222222;  // list separators
+$c-inset:        #060606;  // canvas / inset backgrounds
+$c-inset-alt:    #0b0b0b;  // graph backgrounds
+
+/* ---- Type --------------------------------------------------- */
+$font-body:      Verdana, Geneva, sans-serif;
+$fs-body:        0.7em;   // ~11px against the 16px root
+$fs-small:       82%;     // nav buttons, panel buttons
+
+/* ---- Asset paths --------------------------------------------
+   One place to point at if the art ever moves or is replaced.
+   ------------------------------------------------------------ */
+$theme-img:      "/assets/theme";

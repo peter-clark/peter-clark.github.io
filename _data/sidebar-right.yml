@@ -1,0 +1,35 @@
+# ============================================================
+# RIGHT SIDEBAR
+#
+# Same format as _data/sidebar-left.yml — see the key list at
+# the top of that file. Each "- title:" starts a new panel,
+# and panels render in the order they appear here.
+# ============================================================
+
+- title: Resources
+  link: /resources/
+  links:
+    - name: Hyperphysics
+      url: http://www.hyperphysics.phy-astr.gsu.edu/hbase/hph.html
+    - name: Statistical Physics Reference
+      url: https://statisticalphysics.leima.is/index.html
+    - name: Probability Resource & Proofs
+      url: https://statproofbook.github.io/I/ToC
+    - name: Stat. Phys. Simulations [Java]
+      url: https://stp.clarku.edu/simulations/
+    - name: Bactra, C. Shalizi
+      url: https://bactra.com
+
+- title: Diffusion
+  link: /simulations/diffusion/
+  text: Content goes here
+
+- title: Sandpile
+  link: /simulations/sandpile/
+  text: >
+    The Bak–Tang–Wiesenfeld model demonstrates self-organized
+    criticality, producing scale-free avalanches and fractal
+    patterns.
+
+- title: tbd
+  text: ""

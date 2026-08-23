@@ -1,0 +1,43 @@
+@charset "utf-8";
+
+/* ============================================================
+   NAV — the horizontal button bar sitting on the banner.
+   Items come from _data/nav.yml; markup is _includes/nav.html.
+   The buttons themselves are .btn3d (components/button.scss).
+   ============================================================ */
+
+$nav-button-width: 90px;
+$nav-button-height: 30px;
+
+#hz-menu {
+  margin: 188px 0 0 25px;
+  padding: 0;
+  width: 470px;
+  height: 32px;
+  position: relative;
+  z-index: 2;
+  overflow: visible;
+  list-style-type: none;
+
+  ul {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+  }
+
+  ul li {
+    padding: 0;
+    margin: 0 2px;
+    float: left;
+    list-style-type: none;
+  }
+}
+
+a.hbutton {
+  @extend .btn3d;
+
+  width: $nav-button-width;
+  height: $nav-button-height;
+  line-height: 22px;
+  font-size: $fs-small;
+}

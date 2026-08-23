@@ -1,0 +1,230 @@
+@charset "utf-8";
+
+/* ============================================================
+   PANEL — a sidebar box. Used by both columns.
+
+   Markup (emitted by _includes/panel.html):
+
+     .navbox
+       .navhead      head plate, holds the title button
+       .navbody      repeating filler, holds the panel content
+         .navlinks   | .navinfoL | .panel-media | .panel-embed
+       .navfooter    foot plate
+
+   The head and foot are fixed-height slice images cut to
+   $w-panel, so the box width is fixed; the body stretches to
+   fit whatever content goes in it. Panel content types are at
+   the bottom of this file — add a new one there and a matching
+   branch in _includes/panel.html.
+   ============================================================ */
+
+.navbox {
+  padding: 0;
+  margin: 0 0 $gap-panel 0;
+  position: relative;
+  width: $w-panel;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ---- Head plate --------------------------------------------
+   navtop.jpg is a $w-panel x $h-panel-head plate with a recessed
+   slot at x 16-154, y 13-41. The title button is sized to drop
+   into that slot — see components/button.scss.
+   ------------------------------------------------------------ */
+.navhead {
+  background-image: url("#{$theme-img}/navtop.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  padding: 0;
+  margin: 0;
+  width: $w-panel;
+  height: $h-panel-head;
+  position: relative;
+  overflow: hidden;
+  line-height: normal;  // the plate must not impose a line-height on the button
+}
+
+/* The title button. Sized to sit in the plate's recess; the bevel
+   itself is .btn3d in components/button.scss. Applies to linked
+   titles (<a>) and static ones (<span class="navbtn">) alike. */
+.navhead > a,
+.navhead > span.navbtn {
+  @extend .btn3d;
+
+  width: 144px;
+  height: 29px;
+  line-height: 21px;   // = content-box height, centres the label
+  margin: 13px auto 0;
+  padding: 2px 5px;
+  font-size: 9px;      // matches the banner nav buttons
+}
+
+/* ---- Body ---- */
+.navbody {
+  background-image: url("#{$theme-img}/nav_filler.gif");
+  background-repeat: repeat-y;
+  background-position: center;
+  margin: 0;
+  padding: 0;
+  width: $w-panel;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ---- Foot plate ---- */
+.navfooter {
+  background-image: url("#{$theme-img}/navfooter.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  margin: 0;
+  padding: 0;
+  width: $w-panel;
+  height: $h-panel-foot;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ============================================================
+   PANEL CONTENT TYPES
+   Each corresponds to a `type:` in _data/sidebar-*.yml.
+   ============================================================ */
+
+/* ---- type: text --------------------------------------------
+   A free block of copy. .navinfo centres it, .navinfoL is
+   left-aligned (the usual choice).
+   ------------------------------------------------------------ */
+.navinfo,
+.navinfoL {
+  font-weight: normal;
+  color: $c-text;
+  text-decoration: none;
+  text-indent: 0;
+  padding: 0;
+  margin: 0 auto;
+  width: 136px;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.navinfo  { text-align: center; }
+.navinfoL { text-align: left; }
+
+/* ---- type: links -------------------------------------------
+   A plain list. Links go orange and bold on hover — the only
+   text link on the site that reacts, so the panel reads as a
+   menu rather than as prose.
+   ------------------------------------------------------------ */
+.navlinks {
+  padding: 0;
+  margin: 0 auto;
+  width: 130px;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  list-style-type: none;
+  font-weight: normal;
+  color: $c-text;
+  text-align: left;
+  text-indent: 0;
+  line-height: 170%;
+
+  ul {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+  }
+
+  ul li {
+    color: $c-text;
+
+    a,
+    a:visited {
+      color: $c-text;
+      text-decoration: none;
+    }
+
+    a:hover {
+      color: $c-accent;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  }
+}
+
+/* ---- type: image -------------------------------------------
+   For stills and gifs. The image scales to the panel's inner
+   width and keeps its aspect ratio, so any source size works.
+   A caption is optional.
+   ------------------------------------------------------------ */
+.panel-media {
+  margin: 0 auto;
+  padding: 4px 0 6px;
+  width: 150px;
+  position: relative;
+
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid #000;
+    background: $c-inset;
+    image-rendering: auto;
+  }
+
+  /* Pixel art and small gifs look better upscaled hard than blurred.
+     Add `pixelated: true` to the panel in the YAML to get this. */
+  &.is-pixelated img {
+    image-rendering: pixelated;
+  }
+
+  /* Link-wrapped images get the same orange feedback as menu links. */
+  a:hover img {
+    border-color: $c-accent;
+  }
+}
+
+.panel-caption {
+  display: block;
+  margin-top: 4px;
+  color: $c-text-dim;
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* ---- type: embed -------------------------------------------
+   A responsive box for an iframe or a video, held at a fixed
+   aspect ratio so the panel doesn't jump while it loads.
+   ------------------------------------------------------------ */
+.panel-embed {
+  margin: 0 auto;
+  padding: 4px 0 6px;
+  width: 150px;
+  position: relative;
+
+  .panel-embed-frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background: $c-inset;
+    border: 1px solid #000;
+    overflow: hidden;
+
+    iframe,
+    video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+    }
+  }
+}
+
+/* ---- Spacing between stacked content blocks in one panel ---- */
+.navbody > * + * {
+  margin-top: 6px;
+}

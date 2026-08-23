@@ -1,0 +1,76 @@
+# ============================================================
+# LEFT SIDEBAR
+#
+# Each "- title:" below starts a new panel. Panels appear on
+# the page in the same order they appear here. To add one,
+# copy an existing block and change the values. To remove one,
+# delete its block (or put a # in front of every line).
+#
+# Indentation is meaningful: two spaces, never tabs. Keep the
+# "-" lined up with the other "-" signs.
+#
+# ------------------------------------------------------------
+# KEYS YOU CAN USE (only `title` is required)
+#
+#   title:      text on the panel's button
+#   link:       makes the title button clickable, e.g. /works/
+#
+#   image:      a png / jpg / gif, e.g. /assets/images/panels/x.gif
+#   alt:        description of the image for screen readers
+#   caption:    small grey text underneath the image
+#   image_link: makes the image clickable
+#   pixelated:  true  -> crisp upscaling, good for pixel art and
+#                        small simulation gifs (default is smooth)
+#
+#   text:       a paragraph of copy
+#
+#   links:      a list of links, each with a name and a url
+#
+#   embed:      a URL to put in an iframe (video, widget)
+#   ratio:      aspect ratio for the embed, e.g. "16 / 9"
+#
+#   html:       raw HTML, for anything the keys above miss
+#
+# You can combine them. If a panel has both an image and text,
+# the image renders first, then the text, then any links.
+# ============================================================
+
+- title: Research & Other Work
+  link: /works/
+  links:
+    - name: Link
+      url: "#"
+    - name: Link
+      url: "#"
+    - name: Link
+      url: "#"
+    - name: Link
+      url: "#"
+
+- title: Percolation
+  link: /simulations/percolation/
+  text: >
+    Demonstration of critical threshold for site percolation
+    on a 2D lattice.
+
+- title: Forest Fire
+  link: /simulations/forest-fire/
+  text: >
+    The Drossel–Schwabl model self-organizes to a critical
+    state where fire sizes follow a power law.
+
+- title: Brownian Motion
+  text: Content goes here
+
+# ------------------------------------------------------------
+# EXAMPLE: a panel with a gif in it.
+#
+# Put the file in assets/images/panels/ , then remove the "# "
+# from the start of each of the five lines below.
+#
+# - title: Diffusion
+#   link: /simulations/diffusion/
+#   image: /assets/images/panels/diffusion.gif
+#   caption: 200×200 lattice, 10k walkers
+#   pixelated: true
+# ------------------------------------------------------------

@@ -1,0 +1,16 @@
+{% comment %}
+============================================================
+SIDEBAR — renders one column of panels from a _data file.
+
+Usage:  {% include sidebar.html data="sidebar-left" %}
+
+That reads _data/sidebar-left.yml and renders each entry with
+_includes/panel.html, top to bottom in file order.
+============================================================
+{% endcomment %}
+
+{% assign panels = site.data[include.data] %}
+
+{% for item in panels %}
+  {% include panel.html panel=item %}
+{% endfor %}
