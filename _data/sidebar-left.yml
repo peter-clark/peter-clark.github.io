@@ -23,10 +23,10 @@
 #   image_link: makes the tile link somewhere other than `link`
 #   pixelated:  true  -> crisp upscaling, good for pixel art and
 #                        small simulation gifs (default is smooth)
-#   reveal:     true  -> hovering the tile fades the image out and
-#                        shows this panel's `text` underneath it,
-#                        in orange. The tile keeps its size, so
-#                        the panel never jumps.
+#   reveal:     true  -> the tile shows this panel's `text` in
+#                        orange inside an orange rule, and swaps
+#                        to the gif on hover. The tile keeps its
+#                        size either way, so the panel never jumps.
 #   ratio:      shape of the tile, e.g. "4 / 3". Default is square.
 #
 #   text:       a paragraph of copy. Shown under the panel normally,
@@ -72,6 +72,9 @@
 
 - title: Forest Fire
   link: /simulations/forest-fire/
+  image: /assets/images/panels/forestfire_tile.gif
+  reveal: true
+  pixelated: true
   text: >
     The Drossel–Schwabl model self-organizes to a critical
     state where fire sizes follow a power law.

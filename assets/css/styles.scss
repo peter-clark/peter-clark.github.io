@@ -31,9 +31,11 @@
   "layout/frame",
   "layout/effects";
 
-/* button must come before anything that `@extend .btn3d` */
+/* button and chrome must come before anything that `@extend .btn3d`
+   or `@include chrome-frame` */
 @import
   "components/button",
+  "components/chrome",
   "components/nav",
   "components/panel",
   "components/menubox",

@@ -1,0 +1,140 @@
+@charset "utf-8";
+
+/* ============================================================
+   CHROME FRAME — a flat metal plate that sits raised above the
+   panel it surrounds. Sized by mixin, so it wraps a box of any
+   dimensions.
+
+   REFERENCE. Sampled from the bezel around the banner in
+   TopBanner3.jpg (left rail, inward from the page edge at
+   y=110):
+
+     x0-x5    #323232 -> #181818   falloff into the page
+     x12      #000000              outer scribe
+     x13-x18  #474747 -> #2a2a2a   plate body
+     x19      #101010              inner scribe
+     x20-x25  #242424 -> #000000   trough
+     x26-x29  #ffffff              specular hairline
+     x30      #1a170e              dark, then content
+
+   WHERE THIS DEPARTS FROM IT, deliberately:
+
+   1. No white hairline. The original's is 4px of pure #ffffff,
+      which at this scale reads as a harsh drawn border rather
+      than a highlight. The inner edge is a dark seam instead.
+
+   2. The sweep runs along the plate, not across it — brightest
+      through the middle of each run, falling off towards the
+      corners. A cross-rail bevel makes the frame look moulded;
+      a lengthwise sweep makes it look like flat sheet metal
+      catching a light.
+
+   3. The plate is flat. Depth comes from the drop shadow under
+      it and the shading it casts onto the content, so it reads
+      as a plate lying ON the panel rather than a moulding cut
+      into it.
+
+   The metal is the BORDER only. The interior is filled opaquely
+   and clipped to the content box, so a panel with no background
+   of its own does not end up sitting on bare chrome.
+
+   USAGE
+     .thing { @include chrome-frame; }                    // 6px / 14px
+     .thing { @include chrome-frame(4px, 10px); }         // w, radius
+     .thing { @include chrome-frame(6px, 14px, #000); }   // w, radius, fill
+   or the ready-made classes at the bottom of this file.
+   ============================================================ */
+
+$chrome-w:      6px;   // default plate thickness
+$chrome-r:     14px;   // default outer corner radius
+                       // keep $r larger than $w — $r - $w is the
+                       // inner corner you actually see
+
+/* Lengthwise sweep: dark at the ends, bright through the middle. */
+$chrome-end:    #242424;
+$chrome-rise:   #4d4d4d;
+$chrome-peak:   #7a7a7a;  // the rails are only $w thick, so the
+                          // sweep needs real contrast to register
+$chrome-fill:   #101010;  // what sits inside the frame
+
+@mixin chrome-frame($w: $chrome-w, $r: $chrome-r, $fill: $chrome-fill) {
+  position: relative;
+
+  /* The frame's thickness is a transparent BORDER, not padding.
+     That leaves `padding` free for the component to space its own
+     contents — a control panel needs breathing room inside the
+     frame, and it would otherwise have to fight the frame for it. */
+  border: $w solid transparent;
+  border-radius: $r;
+
+  /* Two layers, so the metal is the BORDER and nothing else:
+
+       1  the panel fill, clipped to the padding box
+       2  the sweep, clipped to the border box
+
+     Layer 1 sits on top and is opaque, so the gradient only ever
+     shows in the $w ring around it. Without this the plate fills
+     the whole element and any panel without its own background —
+     a control column, say — sits on bare chrome.
+
+     One flat gradient along the length. Running it to the right
+     puts the left and right rails at its dark ends while the top
+     and bottom rails carry the highlight through their middle:
+     bright centre, dark corners, all four sides. */
+  background:
+    linear-gradient($fill, $fill),
+    linear-gradient(
+      90deg,
+      $chrome-end 0%,
+      $chrome-rise 20%,
+      $chrome-peak 50%,
+      $chrome-rise 80%,
+      $chrome-end 100%
+    );
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
+  background-repeat: no-repeat;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),  // light catching the top edge
+    inset 0 -1px 0 rgba(0, 0, 0, 0.5),        // underside of the plate
+    0 0 0 1px rgba(0, 0, 0, 0.85),            // crisp outer edge
+    0 2px 5px rgba(0, 0, 0, 0.55),            // raised off the page
+    0 4px 10px rgba(0, 0, 0, 0.3);
+
+  /* The inner edge. A dark seam plus a soft shade falling onto
+     the content from above — the plate overhangs the panel, so
+     the panel is in its shadow. No highlight here on purpose. */
+  &::after {
+    content: "";
+    position: absolute;
+    /* An absolutely positioned child is laid out against the
+       padding box, which is exactly inside the border — so inset:0
+       lands the seam on the frame's inner edge at any thickness. */
+    inset: 0;
+    border-radius: if($r > $w, $r - $w, 1px);
+    box-shadow:
+      0 0 0 1px rgba(0, 0, 0, 0.9),
+      inset 0 2px 5px rgba(0, 0, 0, 0.55),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+    pointer-events: none;
+  }
+}
+
+/* The frame's inner corner radius, for content that should follow
+   it — a canvas or an image filling the frame. Not applied
+   automatically: a frame holding controls wants its buttons to
+   keep their own rounding, not inherit the frame's.
+
+     .thing > canvas { @include chrome-inner-radius(6px, 14px); } */
+@mixin chrome-inner-radius($w: $chrome-w, $r: $chrome-r) {
+  border-radius: if($r > $w, $r - $w, 1px);
+}
+
+/* ---- Ready-made sizes --------------------------------------
+   Reach for these first; use the mixin directly when a
+   component needs its own thickness.
+   ------------------------------------------------------------ */
+.chrome        { @include chrome-frame; }
+.chrome-thin   { @include chrome-frame(4px, 10px); }
+.chrome-thick  { @include chrome-frame(11px, 20px); }
