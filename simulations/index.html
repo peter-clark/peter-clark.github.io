@@ -4,34 +4,35 @@ title: Simulations
 ---
 
 <p class="text-justify">
-A small collection of interactive simulations exploring how complex,
-emergent behavior arises from simple local rules. (under construction)
+A small collection of interactive simulations exploring how complex, emergent
+behavior arises from simple local rules. (under construction)
 </p>
 
 <!-- ============================================================
-     SIMULATIONS LIST — one <li> per simulation.
-     To add one: create simulations/<name>/index.html and
-     assets/js/simulations/<name>.js, then copy an <li> below.
+     SIMULATIONS GALLERY
+     Entries come from _data/simulations.yml — edit that, not this
+     file. Each row is a title button and description on the left,
+     and the simulation's tile on the right: a still frame that
+     starts animating when you point at it.
      ============================================================ -->
-<ul class="sim-list">
-    <li>
-        <a href="/simulations/percolation/">Percolation</a>
-        <span class="desc">Randomly occupied cells on a lattice — does a connected cluster span the grid?</span>
-    </li>
-    <li>
-        <a href="/simulations/forest-fire/">Forest Fire</a>
-        <span class="desc">Trees grow, lightning strikes, fire spreads. A classic self-organized critical system.</span>
-    </li>
-    <li>
-        <a href="/simulations/sandpile/">Abelian Sandpile</a>
-        <span class="desc">Grains topple when a pile gets too tall, cascading into fractal avalanches.</span>
-    </li>
-    <li>
-        <a href="/simulations/diffusion/">Diffusion</a>
-        <span class="desc">A random-walk / lattice diffusion model showing how concentration spreads out.</span>
-    </li>
-    <li>
-        <a href="/simulations/life/">Conway's Life</a>
-        <span class="desc">The canonical cellular automaton — gliders, oscillators, and unbounded growth.</span>
-    </li>
+<ul class="sim-gallery">
+  {% for sim in site.data.simulations %}
+  <li class="sim-entry">
+    <div class="sim-entry-body">
+      <a class="sim-entry-title" href="{{ sim.link }}">{{ sim.title }}</a>
+      <p class="sim-entry-text">{{ sim.text }}</p>
+    </div>
+
+    {% if sim.image %}
+    <a class="sim-entry-tile" href="{{ sim.link }}" aria-label="{{ sim.title }}">
+      <span class="panel-tile">
+        <img class="sim-entry-still" src="{{ sim.still | relative_url }}"
+             alt="{{ sim.alt | default: sim.title }}" width="135" height="135" />
+        <img class="sim-entry-anim" src="{{ sim.image | relative_url }}"
+             alt="" aria-hidden="true" width="135" height="135" loading="lazy" />
+      </span>
+    </a>
+    {% endif %}
+  </li>
+  {% endfor %}
 </ul>

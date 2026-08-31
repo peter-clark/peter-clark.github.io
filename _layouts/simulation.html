@@ -23,13 +23,19 @@ layout: default
         <!-- Per-simulation parameter controls are injected by each sim's JS.
              See the skeleton in assets/js/simulations/{{ page.sim_id }}.js -->
         <div id="sim-params"></div>
-
-        <div class="sim-readout" id="sim-readout"></div>
     </div>
 </div>
 
-<!-- Full-width area below the canvas + controls. Simulations that produce
-     live plots (e.g. percolation) inject their graphs here. -->
+<!-- Live figures. Their own full-width panel rather than the bottom of the
+     control column: in there they made that column taller than the square
+     canvas, which left a band of empty frame beside it. Filled by
+     Sim.readout() so every simulation reports in the same layout. -->
+<div class="sim-stats">
+    <div class="sim-readout" id="sim-readout"></div>
+</div>
+
+<!-- Full-width area below the stage. Simulations that produce live plots
+     inject their graphs here; .sim-graph carries the same frame. -->
 <div id="sim-below" class="sim-below"></div>
 
 {{ content }}
@@ -46,5 +52,5 @@ layout: default
 {% endif %}
 
 <!-- Shared helpers (grid, render loop) then the specific simulation. -->
-<script src="{{ site.baseurl }}/assets/js/simulations/engine.js"></script>
-<script src="{{ site.baseurl }}/assets/js/simulations/{{ page.sim_id }}.js"></script>
+<script src="{{ site.baseurl }}/assets/js/simulations/engine.js?v={{ site.time | date: '%s' }}"></script>
+<script src="{{ site.baseurl }}/assets/js/simulations/{{ page.sim_id }}.js?v={{ site.time | date: '%s' }}"></script>

@@ -61,22 +61,22 @@
    * ==================================================================== */
   const GRAPHS = {
     meanS: {
-      title: 'a) Mean finite cluster size',
+      title: 'Mean finite cluster size',
       xlabel: '$p$', ylabel: '$S(p)$',
       marker: { symbol: 'circle', size: 6, color: ACCENT },
     },
     dist: {
-      title: 'b) Cluster-size distribution',
+      title: 'Cluster-size distribution',
       xlabel: '$s$', ylabel: '$n_s$',
       marker: { symbol: 'circle', size: 6, color: ACCENT },
     },
     pinf: {
-      title: 'c) Size of spanning cluster',
+      title: 'Size of spanning cluster',
       xlabel: '$p$', ylabel: '$P_\\infty(p)$',
       marker: { symbol: 'circle', size: 6, color: ACCENT },
     },
     span: {
-      title: 'd) Probability of a spanning cluster',
+      title: 'Probability of a spanning cluster',
       xlabel: '$p$', ylabel: '$\\Pi(p)$',
       marker: { symbol: 'circle', size: 6, color: ACCENT },
     },
@@ -87,7 +87,6 @@
   /* ------------------------------------------------------------------ */
   const canvas = document.getElementById('sim-canvas');
   const ctx = canvas.getContext('2d');
-  const readoutEl = document.getElementById('sim-readout');
 
   /* ------------------------------------------------------------------ */
   /* State                                                               */
@@ -259,12 +258,25 @@
     updateReadout(r);
   }
 
+
+  /*
+   * Report the live figures. Goes through engine.js so every simulation
+   * lays them out identically — but guarded, because a browser holding a
+   * cached older engine.js would otherwise throw here during boot and take
+   * the whole simulation down with it, graphs included.
+   */
+  function readout(rows) {
+    if (window.Sim && typeof Sim.readout === 'function') Sim.readout(rows);
+  }
+
   function updateReadout(r) {
-    readoutEl.innerHTML =
-      'p = ' + pDisplay.toFixed(3) + ' &nbsp; L = ' + L + '<br>' +
-      'cycles: ' + cycle + '<br>' +
-      'spanning: ' + (r ? (r.spanning ? 'yes' : 'no') : '—') + '<br>' +
-      (r ? 'P∞ = ' + r.pInf.toFixed(3) : '');
+    readout([
+      ['lattice', L + ' \u00d7 ' + L],
+      ['p', pDisplay.toFixed(3)],
+      ['cycles', cycle.toLocaleString()],
+      ['spanning', r ? (r.spanning ? 'yes' : 'no') : '\u2014', r && r.spanning],
+      ['P\u221e', r ? r.pInf.toFixed(3) : null],
+    ]);
   }
 
   /* ------------------------------------------------------------------ */
@@ -429,9 +441,14 @@
   const FONT = { family: T.font || 'Verdana, Geneva, Tahoma, sans-serif', size: 12, color: T.text || '#9a9a9a' };
 
   // Shared axis defaults: short scientific-notation ticks, readable font.
-  function axis(title, extra) {
+  /*
+   * Axis config. The y-axis title is set a size larger than the x: it is
+   * usually the one carrying $...$ math, and MathJax renders noticeably
+   * smaller than the surrounding sans-serif at the same nominal size.
+   */
+  function axis(title, extra, size) {
     return Object.assign({
-      title: { text: title, standoff: 8, font: { size: 13 } },
+      title: { text: title, standoff: 10, font: { size: size || 14 } },
       tickfont: { size: 12 },
       exponentformat: 'e',   // short scientific notation, e.g. 1e+3
       showexponent: 'all',
@@ -442,13 +459,12 @@
 
   function baseLayout(title, xtitle, ytitle, xExtra, yExtra, extra) {
     return Object.assign({
-      title: { text: title, font: { family: FONT.family, size: 13 } },
-      margin: { l: 66, r: 16, t: 34, b: 50 },
+      margin: { l: 64, r: 30, t: 14, b: 52 },
       font: FONT,
       paper_bgcolor: PAGE_BG,
       plot_bgcolor: PAGE_BG,
       xaxis: axis(xtitle, xExtra),
-      yaxis: axis(ytitle, yExtra),
+      yaxis: axis(ytitle, yExtra, 17),
       showlegend: false,
     }, extra || {});
   }
@@ -458,6 +474,21 @@
     type: 'line', x0: P_CRIT, x1: P_CRIT, y0: 0, y1: 1, yref: 'paper',
     line: { color: ACCENT, width: 1, dash: 'dot' },
   };
+
+
+  /*
+   * One graph: the framed plot, with its title underneath as a caption the
+   * way a figure in a paper carries one. Plotly's own `title` sat inside the
+   * plot area and ate vertical space; out here it reads as a label for the
+   * whole panel and the plot gets the room back. The (a)/(b)/(c) marker is
+   * a CSS counter — see .sim-caption in components/simulation.scss.
+   */
+  function figure(plotId, caption) {
+    return '<figure class="sim-figure">' +
+           '<div class="sim-graph"><div id="' + plotId + '" class="sim-plot"></div></div>' +
+           '<figcaption class="sim-caption">' + caption + '</figcaption>' +
+           '</figure>';
+  }
 
   function buildGraphs() {
     if (!hasPlotly) {
@@ -469,10 +500,10 @@
     const below = document.getElementById('sim-below');
     below.innerHTML =
       '<div class="sim-graph-grid">' +
-      '  <div id="g-meanS" class="sim-graph"></div>' +
-      '  <div id="g-dist"  class="sim-graph"></div>' +
-      '  <div id="g-pinf"  class="sim-graph"></div>' +
-      '  <div id="g-span"  class="sim-graph"></div>' +
+      figure('g-meanS', GRAPHS.meanS.title) +
+      figure('g-dist',  GRAPHS.dist.title) +
+      figure('g-pinf',  GRAPHS.pinf.title) +
+      figure('g-span',  GRAPHS.span.title) +
       '</div>';
 
     const cfg = { responsive: true, displayModeBar: false };

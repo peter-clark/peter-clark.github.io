@@ -62,7 +62,6 @@
   /* ------------------------------------------------------------------ */
   const canvas = document.getElementById('sim-canvas');
   const ctx = canvas.getContext('2d');
-  const readoutEl = document.getElementById('sim-readout');
 
   /* ------------------------------------------------------------------ */
   /* State                                                               */
@@ -190,18 +189,31 @@
     ctx.putImageData(img, 0, 0);
   }
 
+
+  /*
+   * Report the live figures. Goes through engine.js so every simulation
+   * lays them out identically — but guarded, because a browser holding a
+   * cached older engine.js would otherwise throw here during boot and take
+   * the whole simulation down with it, graphs included.
+   */
+  function readout(rows) {
+    if (window.Sim && typeof Sim.readout === 'function') Sim.readout(rows);
+  }
+
   function updateReadout() {
     let trees = 0, fires = 0;
     for (let i = 0; i < N; i++) {
       if (grid[i] === TREE) trees++;
       else if (grid[i] === FIRE) fires++;
     }
-    readoutEl.innerHTML =
-      'L = ' + L + ' &nbsp; steps: ' + steps + '<br>' +
-      'tree density: ' + (trees / N).toFixed(3) + '<br>' +
-      'burning: ' + fires + '<br>' +
-      'outbreaks: ' + outbreaks + '<br>' +
-      'largest fire: ' + biggest;
+    readout([
+      ['lattice', L + ' \u00d7 ' + L],
+      ['steps', steps.toLocaleString()],
+      ['tree density', (trees / N).toFixed(3)],
+      ['burning', fires.toLocaleString(), fires > 0],
+      ['outbreaks', outbreaks.toLocaleString()],
+      ['largest fire', biggest.toLocaleString()],
+    ]);
   }
 
   /* ------------------------------------------------------------------ */
@@ -352,15 +364,35 @@
 
   const FONT = { family: T.font || 'Verdana, Geneva, Tahoma, sans-serif', size: 12, color: T.text || '#9a9a9a' };
 
-  function axis(title, extra) {
+  /*
+   * Axis config. The y-axis title is set a size larger than the x: it is
+   * usually the one carrying $...$ math, and MathJax renders noticeably
+   * smaller than the surrounding sans-serif at the same nominal size.
+   */
+  function axis(title, extra, size) {
     return Object.assign({
-      title: { text: title, standoff: 8, font: { size: 13 } },
+      title: { text: title, standoff: 10, font: { size: size || 14 } },
       tickfont: { size: 12 },
       exponentformat: 'e',   // short scientific notation, e.g. 1e+3
       showexponent: 'all',
       gridcolor: GRID_COLOR,
       zeroline: false,
     }, extra || {});
+  }
+
+
+  /*
+   * One graph: the framed plot, with its title underneath as a caption the
+   * way a figure in a paper carries one. Plotly's own `title` sat inside the
+   * plot area and ate vertical space; out here it reads as a label for the
+   * whole panel and the plot gets the room back. The (a)/(b)/(c) marker is
+   * a CSS counter — see .sim-caption in components/simulation.scss.
+   */
+  function figure(plotId, caption) {
+    return '<figure class="sim-figure">' +
+           '<div class="sim-graph"><div id="' + plotId + '" class="sim-plot"></div></div>' +
+           '<figcaption class="sim-caption">' + caption + '</figcaption>' +
+           '</figure>';
   }
 
   function buildGraph() {
@@ -371,18 +403,17 @@
       return;
     }
     document.getElementById('sim-below').innerHTML =
-      '<div class="sim-graph-grid single"><div id="g-fire" class="sim-graph"></div></div>';
+      '<div class="sim-graph-grid single">' + figure('g-fire', GRAPHS.fire.title) + '</div>';
 
     Plotly.newPlot('g-fire',
       [{ x: [], y: [], mode: 'markers', marker: GRAPHS.fire.marker }],
       {
-        title: { text: GRAPHS.fire.title, font: { family: FONT.family, size: 13 } },
-        margin: { l: 66, r: 16, t: 34, b: 50 },
+        margin: { l: 64, r: 30, t: 14, b: 52 },
         font: FONT,
         paper_bgcolor: PAGE_BG,
         plot_bgcolor: PAGE_BG,
         xaxis: axis(GRAPHS.fire.xlabel, { type: 'log' }),
-        yaxis: axis(GRAPHS.fire.ylabel, { type: 'log' }),
+        yaxis: axis(GRAPHS.fire.ylabel, { type: 'log' }, 17),
         showlegend: false,
       },
       { responsive: true, displayModeBar: false });

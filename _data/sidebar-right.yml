@@ -26,6 +26,9 @@
 
 - title: Sandpile
   link: /simulations/sandpile/
+  image: /assets/images/panels/sandpile_tile.gif
+  reveal: true
+  pixelated: true
   text: >
     The Bak–Tang–Wiesenfeld model demonstrates self-organized
     criticality, producing scale-free avalanches and fractal

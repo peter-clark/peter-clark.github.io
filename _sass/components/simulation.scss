@@ -7,11 +7,35 @@
    of the centre content box.
    ============================================================ */
 
+/* ------------------------------------------------------------
+   ONE PANEL DEFINITION for every box on a simulation page — the
+   canvas, the controls, the stats strip and each graph. Change
+   the frame here and all four follow, including any simulation
+   added later.
+   ------------------------------------------------------------ */
+$sim-frame-w: 6px;
+$sim-frame-r: 14px;
+$sim-gap:    16px;
+
+@mixin sim-panel {
+  @include chrome-frame($sim-frame-w, $sim-frame-r);
+}
+
+@mixin sim-panel-inner-radius {
+  @include chrome-inner-radius($sim-frame-w, $sim-frame-r);
+}
+
 .sim-stage {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: $sim-gap;
   padding-top: 10px;
+
+  /* Each column keeps its own height. Without this the default
+     `stretch` pulls the canvas frame down to match whichever
+     column is taller, and the square canvas leaves a band of
+     empty frame under it. */
+  align-items: flex-start;
 }
 
 /* ---- Canvas ----
@@ -19,12 +43,12 @@
    16px gap between this and the control column, so the two read
    as separate instruments rather than one panel. */
 .sim-canvas-wrap {
-  @include chrome-frame(6px, 14px);
+  @include sim-panel;
 
   flex: 1 1 300px;
 
   canvas {
-    @include chrome-inner-radius(6px, 14px);
+    @include sim-panel-inner-radius;
 
     width: 100%;
     height: auto;
@@ -37,7 +61,7 @@
 
 /* ---- Control column ---- */
 .sim-controls {
-  @include chrome-frame(6px, 14px);
+  @include sim-panel;
 
   flex: 0 0 200px;
   display: flex;
@@ -65,6 +89,73 @@
     height: 30px;
     line-height: 22px;
     font-size: 11px;
+  }
+
+  /* ---- Segmented toggle --------------------------------------
+     Two or more buttons acting as one control, sharing the row.
+     The lit state lives on .btn3d (components/button.scss), keyed
+     off aria-pressed, so any simulation can build one of these
+     without new styling.
+     -------------------------------------------------------- */
+  .seg {
+    display: flex;
+    gap: 5px;
+
+    button {
+      flex: 1 1 0;
+      width: auto;
+      min-width: 0;
+      padding-left: 2px;
+      padding-right: 2px;
+      font-size: 10px;
+    }
+  }
+
+  /* ---- Select ------------------------------------------------
+     A recessed slot with the theme's own caret, matching the
+     fader's groove rather than the OS dropdown. appearance:none
+     removes the native chevron, so one is drawn as a background
+     gradient pair — two 5px strokes meeting at a point.
+     -------------------------------------------------------- */
+  select {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    padding: 5px 24px 5px 8px;
+    background-color: #050505;
+    background-image:
+      linear-gradient(45deg, transparent 50%, $c-text-ui 50%),
+      linear-gradient(135deg, $c-text-ui 50%, transparent 50%);
+    background-position:
+      calc(100% - 13px) calc(50% + 1px),
+      calc(100% - 8px) calc(50% + 1px);
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+    color: $c-text-ui;
+    border: 1px solid #2a2a2a;
+    border-radius: 3px;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.9);
+    font-family: $font-body;
+    font-size: 1em;
+    cursor: pointer;
+
+    &:hover { border-color: #3d3d3d; }
+
+    &:focus {
+      outline: none;
+      color: $c-accent;
+      border-color: #4a4a4a;
+      background-image:
+        linear-gradient(45deg, transparent 50%, $c-accent 50%),
+        linear-gradient(135deg, $c-accent 50%, transparent 50%);
+    }
+
+    /* The dropdown list itself is drawn by the OS; this is all we
+       get to say about it. */
+    option {
+      background: #101010;
+      color: $c-text-ui;
+    }
   }
 
   /* ---- Fader -------------------------------------------------
@@ -199,14 +290,58 @@
   }
 }
 
+/* ---- Stats strip -------------------------------------------
+   Live numbers used to sit at the bottom of the control column,
+   which made that column taller than the square canvas beside
+   it. They get their own full-width panel under the stage now,
+   which fixes the height and gives the figures room to be read.
+
+   Populated by Sim.readout() in engine.js — one call, same
+   layout for every simulation.
+   ------------------------------------------------------------ */
+.sim-stats {
+  @include sim-panel;
+
+  margin-top: $sim-gap;
+  padding: 10px 12px;
+}
+
 .sim-readout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 26px;
   color: $c-text-ui-dim;
-  line-height: 1.6;
+  line-height: 1.35;
+
+  &:empty { display: none; }
+}
+
+.sim-stat {
+  display: flex;
+  flex-direction: column;
+  min-width: 78px;
+}
+
+.sim-stat-label {
+  color: $c-text-dim;
+  white-space: nowrap;
+}
+
+.sim-stat-value {
+  color: $c-text-ui;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+/* A figure worth drawing the eye to — pass `true` as the third
+   element of a Sim.readout row. */
+.sim-stat.is-live .sim-stat-value {
+  color: $c-accent;
 }
 
 /* ---- Live graphs, full width below the stage ---- */
 .sim-below {
-  margin-top: 16px;
+  margin-top: $sim-gap;
 
   &:empty { display: none; }
 }
@@ -214,16 +349,64 @@
 .sim-graph-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
+  gap: $sim-gap;
+  counter-reset: sim-figure;
 
   &.single { grid-template-columns: 1fr; }
 }
 
+/* ---- Figure --------------------------------------------------
+   The framed plot plus its caption underneath, the way a figure
+   in a paper carries one. Plotly's built-in title sat inside the
+   plot area, competing with the data for space; out here it
+   labels the whole panel and the plot keeps the room.
+   -------------------------------------------------------------- */
+.sim-figure {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.sim-caption {
+  margin-top: 7px;
+  padding: 0 2px;
+  color: $c-text-ui-dim;
+  line-height: 1.4;
+  text-align: left;
+
+  /* (a), (b), (c) … numbered per grid, matching how the prose under
+     each simulation refers to its graphs. */
+  &::before {
+    counter-increment: sim-figure;
+    content: "(" counter(sim-figure, lower-alpha) ") ";
+    color: $c-accent;
+    font-weight: bold;
+  }
+}
+
+/* Graphs wear the same frame as everything else.
+
+   The frame and the plot are two elements on purpose. Plotly
+   sizes itself from the element's OFFSET box, which includes the
+   border — point it at a bordered element and every plot comes
+   out 2 x $sim-frame-w too big and spills over its own frame.
+   So .sim-graph carries the frame and .sim-plot, which has no
+   border of its own, is what Plotly draws into.
+
+   Any future simulation should emit the same pair:
+     <div class="sim-graph"><div id="g-x" class="sim-plot"></div></div>
+   ------------------------------------------------------------ */
 .sim-graph {
+  @include sim-panel;
+
   width: 100%;
-  height: 250px;
-  background: $c-inset-alt;
-  border: 1px solid #000;
+  height: 262px;   // 250 of plot + the 6px frame top and bottom
+  overflow: hidden;
+}
+
+.sim-plot {
+  width: 100%;
+  height: 100%;
 }
 
 .sim-note { color: $c-text-dim; }

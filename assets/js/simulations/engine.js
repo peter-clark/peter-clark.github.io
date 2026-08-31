@@ -7,7 +7,7 @@
  *   - Grid: a flat typed-array 2D grid with neighbour helpers.
  *   - ui helpers for injecting sliders/selects into the #sim-params panel.
  *
- * Each individual simulation (percolation.js, life.js, ...) creates a SimEngine
+ * Each individual simulation (percolation.js, sandpile.js, ...) creates a SimEngine
  * and fills in its own init() / step() / draw() callbacks. Nothing here runs a
  * model on its own — it is pure plumbing.
  */
@@ -198,6 +198,49 @@
   };
 
   /* ------------------------------------------------------------------ */
+  /* readout: the live figures under the stage.                          */
+  /*                                                                     */
+  /* Every simulation reports different numbers, but they should all     */
+  /* LOOK the same, so none of them writes its own markup. Pass rows and */
+  /* this lays them out:                                                 */
+  /*                                                                     */
+  /*   Sim.readout([                                                     */
+  /*     ['mean height', density.toFixed(3)],                            */
+  /*     ['avalanches', n.toLocaleString()],                             */
+  /*     ['running', size, true],     // true -> highlighted in accent   */
+  /*   ]);                                                               */
+  /*                                                                     */
+  /* Rows with a null/undefined value are skipped, so a figure that      */
+  /* only exists sometimes can be passed unconditionally. Values are     */
+  /* inserted as text, never as HTML.                                    */
+  /* ------------------------------------------------------------------ */
+  function readout(rows) {
+    const el = document.getElementById('sim-readout');
+    if (!el) return;
+    el.textContent = '';
+    for (const row of rows) {
+      if (!row) continue;
+      const [label, value, live] = row;
+      if (value === null || value === undefined || value === '') continue;
+
+      const cell = document.createElement('div');
+      cell.className = live ? 'sim-stat is-live' : 'sim-stat';
+
+      const l = document.createElement('span');
+      l.className = 'sim-stat-label';
+      l.textContent = label;
+
+      const v = document.createElement('span');
+      v.className = 'sim-stat-value';
+      v.textContent = String(value);
+
+      cell.appendChild(l);
+      cell.appendChild(v);
+      el.appendChild(cell);
+    }
+  }
+
+  /* ------------------------------------------------------------------ */
   /* SimTheme: one shared palette for every simulation.       */
   /* Kept in sync with _sass/theme.scss. Change it here to re-skin    */
   /* all canvases + graphs at once.                                      */
@@ -218,5 +261,5 @@
   };
 
   global.SimTheme = SimTheme;
-  global.Sim = { Grid, SimEngine, ui, theme: SimTheme };
+  global.Sim = { Grid, SimEngine, ui, readout, theme: SimTheme };
 })(window);

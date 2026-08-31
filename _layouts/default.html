@@ -56,9 +56,12 @@
 
 </div>
 
+{% comment %} Cache-buster: changes on every build, so a browser can never serve
+     a stale script against freshly-built markup. {% endcomment %}
+{% assign asset_v = site.time | date: '%s' %}
 {% if page.background_effect %}{% assign bgfx = page.background_effect %}{% else %}{% assign bgfx = site.background_effect %}{% endif %}
-{% if bgfx %}<script src="{{ '/assets/js/' | append: bgfx | append: '.js' }}" data-target="bg-fx"></script>{% endif %}
-{% if site.banner_effect %}<script src="{{ '/assets/js/' | append: site.banner_effect | append: '.js' }}" data-target="banner-fx-layer"></script>{% endif %}
+{% if bgfx %}<script src="{{ site.baseurl }}/assets/js/{{ bgfx }}.js?v={{ asset_v }}" data-target="bg-fx"></script>{% endif %}
+{% if site.banner_effect %}<script src="{{ site.baseurl }}/assets/js/{{ site.banner_effect }}.js?v={{ asset_v }}" data-target="banner-fx-layer"></script>{% endif %}
 
 </body>
 </html>

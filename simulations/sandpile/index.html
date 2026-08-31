@@ -2,6 +2,7 @@
 layout: simulation
 title: Abelian Sandpile
 sim_id: sandpile
+plotly: true
 description: >
   Drop grains of sand onto a grid. When a cell accumulates four or more grains
   it topples, sending one grain to each neighbour — which may trigger further
@@ -9,3 +10,33 @@ description: >
   example of self-organized criticality, producing scale-free avalanches and
   striking fractal patterns.
 ---
+
+<!-- Body content renders BELOW the two graphs. Edit freely. -->
+<div class="text-justify" style="margin-top: 26px;">
+<h3>How it works</h3>
+<p>
+Press <strong>Start</strong> to begin dropping grains. Each site holds 0–3 grains
+at rest, drawn as increasing brightness — an empty site is nearly black, a site
+holding 3 is full orange and one grain away from toppling. A site that reaches 4
+gives one grain to each of its four neighbours, which can push them over in turn.
+Relaxation is shown as <em>parallel sweeps</em>, so you watch the avalanche front
+travel outward a ring at a time; cells flash pale while they are mid-topple.
+Grains that fall off the edge are lost, and that leak is what lets the pile reach
+a steady state rather than filling forever.
+</p>
+<p>
+The striking thing is that nothing here is tuned. Start from an empty lattice, a
+half-full one, or a maximally full one — the pile drives <em>itself</em> to the
+same critical density of about 2.125 grains per site, and stays there. Dropping
+at the centre builds the familiar fractal target; dropping at random sites gives
+cleaner avalanche statistics, since every site gets its turn as the seed.
+</p>
+<p><em>Graphs:</em>
+(a) the avalanche-size distribution N(s) on log-log axes — at criticality this is
+a straight line, meaning avalanches have no characteristic size, and a single
+grain can set off anything from nothing to a system-spanning cascade;
+(b) mean height against avalanche number, the self-organization itself, with the
+critical density marked as a dotted line. Watch it climb from an empty start or
+fall from a full one, then sit on the line.
+</p>
+</div>

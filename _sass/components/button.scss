@@ -169,6 +169,22 @@ $btn-text-hot:    #fff5e8;
     top: 4px;
     bottom: 0;
   }
+
+  /* A button that stays lit because it represents the current choice —
+     one of a pair acting as a single control. Driven off aria-pressed so
+     the visual state and the state assistive tech reads are the same fact,
+     not two that can drift apart. `.is-on` is there for markup that has no
+     sensible pressed semantics. */
+  &[aria-pressed="true"],
+  &.is-on {
+    color: $btn-text-hot;
+    cursor: default;
+  }
+
+  &[aria-pressed="true"]::before,
+  &.is-on::before {
+    @include btn-face-hot;
+  }
 }
 
 /* ------------------------------------------------------------

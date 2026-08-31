@@ -84,11 +84,12 @@ a:active {
   }
 }
 
-/* ---- Shared list patterns ----------------------------------
-   A row per item with a hairline separator: used by the
-   simulations gallery and the research/link lists.
+/* ---- Shared list pattern -----------------------------------
+   A row per item with a hairline separator. Used by the
+   research/link lists; the simulations gallery has its own
+   component (components/gallery.scss) now that its rows carry a
+   button and an image.
    ------------------------------------------------------------ */
-.sim-list,
 .link-list {
   list-style: none;
   margin: 0;
@@ -102,11 +103,8 @@ a:active {
   }
 }
 
-.sim-list a { font-weight: bold; }
 
-.sim-list .desc,
 .link-list .meta {
   color: $c-text-dim;
 }
 
-.sim-list .desc { display: block; }

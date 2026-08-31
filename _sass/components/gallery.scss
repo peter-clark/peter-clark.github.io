@@ -1,0 +1,108 @@
+@charset "utf-8";
+
+/* ============================================================
+   GALLERY — the list on /simulations/.
+
+   One row per simulation: title button and description on the
+   left, the simulation's tile on the right. The tile shows a
+   still frame until you point at it, then plays the gif.
+
+   Entries come from _data/simulations.yml, so adding a
+   simulation is a YAML entry — no markup, no styling.
+
+   Reuses .btn3d for the title and .panel-tile for the image, so
+   a row is built from the same two pieces as a sidebar panel and
+   inherits any change made to either.
+   ============================================================ */
+
+$gallery-tile: 135px;   // matches the sidebar tile
+$gallery-gap:   18px;
+
+.sim-gallery {
+  list-style: none;
+  margin: 0;
+  padding-left: 0;
+}
+
+.sim-entry {
+  display: flex;
+  align-items: flex-start;
+  gap: $gallery-gap;
+  padding: 16px 0;
+  border-bottom: 1px solid $c-rule;
+
+  &:last-child { border-bottom: 0; }
+}
+
+.sim-entry-body {
+  flex: 1 1 auto;
+  min-width: 0;      // lets the text wrap instead of forcing the row wide
+}
+
+/* Title button — the same control as a sidebar panel title. */
+.sim-entry-title {
+  @extend .btn3d;
+
+  width: 176px;
+  height: 29px;
+  line-height: 21px;
+  margin-bottom: 9px;
+  padding: 2px 8px;
+  font-size: 10px;
+}
+
+.sim-entry-text {
+  margin: 0;
+  padding: 0;
+  color: $c-text;
+  line-height: 1.55;
+  text-align: justify;
+}
+
+/* ---- Tile ----------------------------------------------------
+   Two images stacked in the same box: the still on top, the gif
+   underneath. Hovering fades the still out rather than swapping
+   `src`, so there is no flash of an unloaded image and no layout
+   shift — the box is a fixed square either way.
+   -------------------------------------------------------------- */
+.sim-entry-tile {
+  flex: 0 0 $gallery-tile;
+  display: block;
+  width: $gallery-tile;
+
+  .panel-tile {
+    aspect-ratio: 1 / 1;
+    /* Orange rule at all times, matching the sidebar tiles. */
+    box-shadow: inset 0 0 0 1px $c-accent;
+  }
+
+  img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    image-rendering: pixelated;
+    display: block;
+  }
+
+  .sim-entry-anim  { z-index: 0; }
+  .sim-entry-still { z-index: 1; transition: opacity 0.22s ease; }
+
+  &:hover .sim-entry-still,
+  &:focus-visible .sim-entry-still { opacity: 0; }
+
+  &:focus-visible { outline: none; }
+}
+
+/* Narrow screens: the tile drops under the text rather than
+   squeezing it into a column. */
+@media only screen and (max-width: 620px) {
+  .sim-entry {
+    flex-direction: column;
+  }
+
+  .sim-entry-tile {
+    flex: 0 0 auto;
+  }
+}

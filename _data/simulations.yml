@@ -1,0 +1,57 @@
+# ============================================================
+# SIMULATIONS GALLERY — the list on /simulations/.
+#
+# One entry per simulation. To add one, copy a block and change
+# the values; the page builds itself from this file, so there is
+# no HTML to edit.
+#
+#   title    text on the button
+#   link     where the button and the image go
+#   text     the description beside it
+#   image    the animated tile (plays on hover)
+#   still    the frame shown until then
+#   alt      description of the image for screen readers
+#
+# Leave `image` and `still` out and the row renders as button and
+# text only — fine for a simulation with no tile yet.
+#
+# The tiles live in assets/images/panels/ and their stills in
+# assets/images/sims/. Both are 135px; see the README in the
+# panels folder for how they are encoded.
+# ============================================================
+
+- title: Percolation
+  link: /simulations/percolation/
+  image: /assets/images/panels/percolation_tile.gif
+  still: /assets/images/sims/percolation_still.png
+  alt: A square lattice with a spanning cluster picked out in orange
+  text: >
+    Randomly occupied cells on a lattice — does a connected cluster span the
+    grid? Below a critical occupation probability the clusters stay small and
+    isolated; above it one cluster suddenly reaches all the way across.
+
+- title: Forest Fire
+  link: /simulations/forest-fire/
+  image: /assets/images/panels/forestfire_tile.gif
+  still: /assets/images/sims/forestfire_still.png
+  alt: A lattice of green trees with orange fire fronts spreading through it
+  text: >
+    Trees grow, lightning strikes, fire spreads. The Drossel–Schwabl model
+    self-organizes to a critical state with no characteristic fire size, so
+    the distribution of burn sizes follows a power law.
+
+- title: Abelian Sandpile
+  link: /simulations/sandpile/
+  image: /assets/images/panels/sandpile_tile.gif
+  still: /assets/images/sims/sandpile_still.png
+  alt: A sandpile relaxing into a fractal pattern of orange grains
+  text: >
+    Grains topple when a pile gets too tall, cascading into avalanches with no
+    characteristic size. The original example of self-organized criticality,
+    and the source of some very striking fractal patterns.
+
+- title: Diffusion
+  link: /simulations/diffusion/
+  text: >
+    A random-walk lattice model showing how concentration spreads out over
+    time, and how the mean squared displacement grows.
