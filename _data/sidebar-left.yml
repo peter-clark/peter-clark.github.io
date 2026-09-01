@@ -80,7 +80,13 @@
     state where fire sizes follow a power law.
 
 - title: Brownian Motion
-  text: Content goes here
+  link: /simulations/brownian/
+  image: /assets/images/panels/brownian_tile.gif
+  reveal: true
+  pixelated: true
+  text: >
+    Random walks in 1-D and 2-D — diffusive spreading, first-passage
+    times against an absorbing wall, and drift under a field.
 
 # ------------------------------------------------------------
 # EXAMPLE: a panel with a gif in it.

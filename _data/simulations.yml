@@ -50,6 +50,17 @@
     characteristic size. The original example of self-organized criticality,
     and the source of some very striking fractal patterns.
 
+- title: Brownian Motion
+  link: /simulations/brownian/
+  image: /assets/images/panels/brownian_tile.gif
+  still: /assets/images/sims/brownian_still.png
+  alt: Several random-walk paths tracing across a dark field
+  text: >
+    Random walkers in one dimension and two. A large ensemble drives the
+    statistics while a handful of individual paths are drawn — watch them
+    spread as the square root of time, end against an absorbing wall, or
+    stream sideways under a field.
+
 - title: Diffusion
   link: /simulations/diffusion/
   text: >

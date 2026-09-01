@@ -1,0 +1,73 @@
+---
+layout: simulation
+title: Brownian Motion
+sim_id: brownian
+plotly: true
+description: >
+  An ensemble of random walkers, in one dimension and two. Watch the cloud
+  spread as the square root of time, put an absorbing wall at the origin and
+  measure how long walkers survive, or switch on a field and watch diffusion
+  give way to drift.
+---
+
+<!-- Body content renders BELOW the two graphs. Edit freely. -->
+<div class="text-justify" style="margin-top: 26px;">
+<h3>How it works</h3>
+<p>
+Every walker takes one unit step per tick — <strong>±1</strong> in one
+dimension, or one of four directions in two. Nothing else.
+</p>
+<p>
+The canvas and the graphs are doing different jobs. <strong>The graphs average
+over the whole ensemble</strong> — thousands of walkers, none of them drawn.
+<strong>The canvas draws a handful of individual paths</strong>, the way sample
+paths are drawn in a textbook. A cloud of ten thousand dots tells you nothing
+the graphs do not; a dozen legible trajectories show you what a single walker
+actually does, which is the part worth watching. Both sliders are yours: how
+many walkers the statistics run over, and how many of them get drawn.
+</p>
+<p>
+The <strong>1-D</strong> view is the classic x(t) diagram — time runs across,
+position is vertical, t = 0 pinned to the left. Both axes rescale in place as
+the run grows, so the whole history stays on screen. The dotted envelope is
+±√t, the scale the <em>ensemble</em> spreads at; watching individual paths
+wander in and out of it is the clearest picture of what "diffusive" means.
+The <strong>2-D</strong> views draw each shown walker's recent path on a torus,
+so a walker leaving one edge returns at the opposite one and nothing is ever
+lost off-screen.
+</p>
+
+<h3>The four setups</h3>
+<p>
+<strong>1-D free</strong> and <strong>2-D free</strong> are the plain walk. The
+position distribution is Gaussian and the mean squared displacement grows as
+⟨r²⟩ = t, which is why the measured curve sits on the dotted reference line
+regardless of dimension.
+</p>
+<p>
+<strong>1-D on [0, ∞)</strong> puts an absorbing wall at the origin. Every
+walker is released at x₀, and one that reaches 0 is <em>absorbed</em> — it stops
+existing, and its path simply ends there, marked with a dot on the wall. The
+ensemble thins out as the run goes on, so the fraction still walking is the
+survival probability measured directly rather than inferred.
+</p>
+<p>
+This is the setup with exact and slightly surprising answers. The walker returns
+to the origin with probability 1 — every path ends eventually — and yet the
+<em>mean</em> time it takes is infinite. Both graphs show why: first-passage
+times follow a t<sup>−3/2</sup> power law, a tail heavy enough that the mean
+diverges, and the surviving fraction decays only as t<sup>−1/2</sup>. Raise the
+ensemble size for a cleaner tail; the statistics come from however many walkers
+you started with, since none are replaced.
+</p>
+<p>
+<strong>2-D in a field</strong> biases the x-steps by b, giving each walker a
+mean drift of b/2 per step. b runs either way about zero, so the paths can be
+driven left or right. They still spread diffusively about their centre, but
+that centre now moves linearly — on the torus the paths visibly stream across
+and wrap around. On the graph the measured ⟨r²⟩ bends up away from the
+diffusive line as the ballistic term takes over. Note that only the drawing
+wraps: positions are stored unwrapped, so ⟨r²⟩ is the true displacement rather
+than something that saturates at the box size.
+</p>
+</div>
