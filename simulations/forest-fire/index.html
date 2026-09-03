@@ -4,30 +4,79 @@ title: Forest Fire
 sim_id: forest-fire
 plotly: true
 description: >
-  Each cell is empty, a tree, or burning. Empty cells grow trees with
-  probability p; trees ignite from burning neighbours, or spontaneously by
-  lightning with probability f. The Drossel–Schwabl model self-organizes to a
-  critical state where fire sizes follow a power law.
+  Each cell is empty, a tree, or burning. Empty cells grow trees with probability
+  p; trees ignite from burning neighbours, or spontaneously by lightning with
+  probability f. The Drossel-Schwabl model self-organizes to a critical state
+  where fire sizes follow a power law.
+
+  How it works: Start runs the model forward one synchronous timestep at a time.
+  Green cells are trees, orange cells are burning, dark cells are empty ground.
+  Every burning cell becomes empty, every tree adjacent to a fire ignites, empty
+  ground regrows a tree with probability p, and any tree is struck by lightning
+  with probability f. The graph accumulates over all outbreaks and demonstrates
+  convergence to a power law as the simulation progresses.
+references:
+  - authors: Bak, P., Chen, K. & Tang, C.
+    year: 1990
+    title: A forest-fire model and some thoughts on turbulence
+    where: Phys. Lett. A 147, 297-300
+    doi: 10.1016/0375-9601(90)90451-S
+    note: the original forest-fire automaton, without lightning
+  - authors: Drossel, B. & Schwabl, F.
+    year: 1992
+    title: Self-organized critical forest-fire model
+    where: Phys. Rev. Lett. 69, 1629-1632
+    doi: 10.1103/PhysRevLett.69.1629
+    note: the model simulated here
+  - authors: Grassberger, P.
+    year: 2002
+    title: Critical behaviour of the Drossel-Schwabl forest fire model
+    where: New J. Phys. 4, 17
+    doi: 10.1088/1367-2630/4/1/317
+    note: shows the scaling is not simple criticality
 ---
 
-<!-- Body content renders BELOW the graph. Edit freely. -->
+<!-- Body content renders BELOW the graph -->
 <div class="text-justify" style="margin-top: 26px;">
 <h3>How it works</h3>
 <p>
-Press <strong>Start</strong> to run the model. Teal cells are trees, black
-cells are actively burning, and light cells are empty ground. Each timestep
-every burning cell turns to ash, every tree next to a fire catches, empty
-ground regrows a tree with probability <strong>p</strong>, and any tree may be
-struck by lightning with probability <strong>f</strong>.
+<strong>Start</strong> runs the model forward one synchronous timestep at a time.
+Green cells are trees, orange cells are burning, dark cells are empty ground.
+Each timestep every burning cell becomes empty, every tree adjacent to a fire
+ignites, empty ground regrows a tree with probability <strong>p</strong>, and any
+tree is struck by lightning with probability <strong>f</strong>.
 </p>
 <p>
-When lightning strikes, the connected cluster of trees around it is exactly
-what the fire will consume, so that cluster's size is recorded as one outbreak.
-The graph plots the log-binned frequency <em>N(s)</em> of outbreaks of size
-<em>s</em> on log-log axes. As the forest self-organizes it approaches a
-critical state and the distribution straightens into a power law — small fires
-are common, system-spanning ones are rare but never absent. The separation of
-timescales matters: the smaller <strong>f/p</strong> is, the cleaner the
-scaling.
+When lightning strikes a tree, the connected cluster of trees containing it is
+exactly what the fire will consume, so that cluster's size is recorded as one
+outbreak of size s. The lattice is never tuned to a critical point; it reaches
+one on its own from any starting density, which is what makes the model an
+example of self-organized criticality<sup class="sim-cite"><a href="#ref-2">[2]</a></sup>.
 </p>
+
+<h3>Parameters:</h3>
+<p>
+<strong>p</strong> is the per-cell regrowth probability and <strong>f</strong> the
+per-tree lightning probability. Only their ratio matters to the scaling. The
+model requires a double separation of timescales &mdash; fires complete faster
+than trees grow, and trees grow faster than lightning strikes &mdash; so the
+scaling regime is $f/p \ll 1$ and the cleanest power law appears at the smallest
+f/p the lattice size will support. Large f burns the forest down before clusters
+can form; large p refills it faster than fire can clear it.
+</p>
+<p>
+The apparent exponent is not universal. Measured over increasing system sizes it
+drifts rather than converging, and the distribution is better described as a
+crossover than as true critical scaling<sup class="sim-cite"><a href="#ref-3">[3]</a></sup>.
+</p>
+
+<h3>Graphs:</h3>
+<p>
+<strong class="sim-key">(a)</strong> fire-size distribution N(s), the log-binned
+frequency of outbreaks of size s on log-log axes. A straight line means fires
+have no characteristic size: small fires are common, system-spanning fires are
+rare but never absent. The line straightens as the forest self-organizes, and
+steepens at the largest s where the lattice is too small to hold a bigger fire.
+</p>
+
 </div>

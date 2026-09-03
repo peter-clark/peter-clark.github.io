@@ -19,7 +19,7 @@
  *
  * Spanning is defined here as a cluster touching both the top and bottom rows.
  *
- * TUNABLES: NP (sweep resolution), P_CRIT (reference line), DIST_BASE (log-bin
+ * TUNABLES: NP (sweep resolution), MODES (thresholds), DIST_BASE (log-bin
  * base for graph b), and the default L / pDisplay below.
  */
 (function () {
@@ -29,7 +29,28 @@
   /* Constants                                                           */
   /* ------------------------------------------------------------------ */
   const NP = 101;                 // number of p-grid points, p = 0 .. 1
-  const P_CRIT = 0.592746;        // site-percolation threshold (square lattice)
+
+  /*
+   * MODES. Site percolation occupies the SITES with probability p and joins
+   * occupied neighbours. Bond percolation keeps every site and opens the
+   * EDGES between them with probability p. Different thresholds, and the
+   * bond one is exact rather than numerical — self-duality of the square
+   * lattice pins it at 1/2.
+   */
+  const MODES = {
+    site: { label: 'Site', pc: 0.592746, pcExact: false },
+    bond: { label: 'Edge', pc: 0.5,      pcExact: true  },
+  };
+  /*
+   * The lattice is drawn as GEOMETRY into a fixed-size canvas rather than one
+   * pixel per site. Pixel-per-site cannot work here: the canvas is laid out at
+   * whatever width the column gives it (~330 css px), so an L=128 image was
+   * being nearest-neighbour scaled by 1.29 and an L=256 one was being scaled
+   * DOWN — either way the fine structure that distinguishes the two modes was
+   * destroyed before it ever reached the screen. Drawing at canvas resolution
+   * means node and link sizes are chosen in device pixels and survive.
+   */
+  const CANVAS_PX = 768;
   const DIST_BASE = 1.5;          // log-bin ratio for the size distribution
   const GRAPH_MS = 400;           // min ms between graph refreshes
   const FRAME_BUDGET_MS = 12;     // compute budget per animation frame
@@ -44,10 +65,20 @@
   const PAGE_BG = T.panelBg || '#0b0b0b';
   const GRID_COLOR = T.grid || '#333333';
 
-  // Lattice cell colours. Spanning cluster uses the accent (orange).
+  /*
+   * Lattice colours. The bright accent always marks the SPANNING cluster; the
+   * dim variants are the same hue stepped down, so the two carry the same
+   * meaning whichever element they land on.
+   */
   const COLOR_EMPTY = T.empty || [11, 11, 11];    // dark ground
   const COLOR_FINITE = T.finite || [95, 95, 98];  // neutral gray
   const COLOR_SPAN = T.span || [230, 115, 0];     // orange accent
+  const COLOR_SPAN_DIM = [150, 76, 4];            // spanning cluster, secondary
+  const COLOR_FINITE_DIM = [58, 58, 60];          // finite clusters, secondary
+  const COLOR_SCAFFOLD = [46, 46, 48];            // the always-present bond lattice
+  const COLOR_PATH = '#ffffff';                   // the shortest crossing
+
+  function rgb(c) { return 'rgb(' + c[0] + ',' + c[1] + ',' + c[2] + ')'; }
 
   /* ==================================================================== *
    *  EDIT ME — graph appearance.                                         *
@@ -80,6 +111,12 @@
       xlabel: '$p$', ylabel: '$\\Pi(p)$',
       marker: { symbol: 'circle', size: 6, color: ACCENT },
     },
+    chem: {
+      title: 'Shortest crossing path, against the straight-line distance',
+      xlabel: '$p$', ylabel: '$\\ell_{min} / L$',
+      marker: { symbol: 'circle', size: 6, color: ACCENT },
+      straight: { color: '#7a7a7a', width: 1, dash: 'dot' },
+    },
   };
 
   /* ------------------------------------------------------------------ */
@@ -94,11 +131,15 @@
   let L = 128;                    // lattice side length (32..256, powers of two)
   let N = L * L;
   let pDisplay = 0.59;
+  let mode = 'site';              // 'site' | 'bond'
 
-  let field, parent, sz, img;     // typed arrays / ImageData, sized to N
+  let field, bondField, parent, sz;
+  let bfsQ, bfsPrev, bfsDist;     // shortest-path scratch
+  let pathList = [];              // the shortest crossing, endpoint first
 
-  // Per-p-grid accumulators (curves a, c, d).
-  let cnt, spanCnt, sumS, sumPinf;
+  // Per-p-grid accumulators (curves a, c, d, e).
+  let cnt, spanCnt, sumS, sumPinf, sumChem, chemCnt;
+  let lastChem = 0;
   // Distribution accumulator at pDisplay (graph b).
   let distHist, distSamples;
 
@@ -116,14 +157,23 @@
   function allocate() {
     N = L * L;
     field = new Float32Array(N);
+    // Two bonds per site: 2i is the edge to the right, 2i+1 the edge below.
+    // Edges off the lattice are simply never consulted.
+    bondField = new Float32Array(2 * N);
     parent = new Int32Array(N);
     sz = new Int32Array(N);
-    canvas.width = L;
-    canvas.height = L;
-    img = ctx.createImageData(L, L);
-    // Opaque alpha channel, set once.
-    const d = img.data;
-    for (let i = 3; i < d.length; i += 4) d[i] = 255;
+    bfsQ = new Int32Array(N);
+    bfsPrev = new Int32Array(N);
+    bfsDist = new Int32Array(N);
+    pathList = [];
+
+    // Fixed backing store — the drawing scales with L, not the canvas.
+    canvas.width = CANVAS_PX;
+    canvas.height = CANVAS_PX;
+    // Shapes are drawn at device resolution now, so let the browser filter
+    // when it fits the canvas to the column. `pixelated` (the sheet default,
+    // right for the pixel-per-cell simulations) would alias the thin links.
+    canvas.style.imageRendering = 'auto';
   }
 
   function resetStats() {
@@ -131,6 +181,9 @@
     spanCnt = new Float64Array(NP);
     sumS = new Float64Array(NP);
     sumPinf = new Float64Array(NP);
+    sumChem = new Float64Array(NP);
+    chemCnt = new Float64Array(NP);
+    lastChem = 0;
     cycle = 0;
     sweepPos = 0;
     resetDistribution();
@@ -145,7 +198,14 @@
 
   function newField() {
     for (let i = 0; i < N; i++) field[i] = Math.random();
+    for (let i = 0; i < 2 * N; i++) bondField[i] = Math.random();
   }
+
+  function pc() { return MODES[mode].pc; }
+
+  // Is the edge from site i to its right / lower neighbour open at p?
+  function bondRight(i, p) { return bondField[2 * i] < p; }
+  function bondDown(i, p) { return bondField[2 * i + 1] < p; }
 
   /* ------------------------------------------------------------------ */
   /* Union-find                                                          */
@@ -174,20 +234,32 @@
   function computeAt(p, opts) {
     opts = opts || {};
 
-    // Initialise union-find: occupied cells are their own singleton clusters.
+    /*
+     * Initialise union-find, then join neighbours.
+     *
+     * SITE: a cell is present when field[i] < p, and two present neighbours
+     *       are always joined.
+     * BOND: every cell is present, and a pair is joined only when the edge
+     *       between them is open.
+     */
+    const bond = mode === 'bond';
     for (let i = 0; i < N; i++) {
-      if (field[i] < p) { parent[i] = i; sz[i] = 1; }
+      if (bond || field[i] < p) { parent[i] = i; sz[i] = 1; }
       else { parent[i] = -1; }
     }
 
-    // Union each occupied cell with its left and upper neighbours.
     for (let y = 0; y < L; y++) {
       const row = y * L;
       for (let x = 0; x < L; x++) {
         const i = row + x;
         if (parent[i] < 0) continue;
-        if (x > 0 && parent[i - 1] >= 0) unite(i, i - 1);
-        if (y > 0 && parent[i - L] >= 0) unite(i, i - L);
+        if (bond) {
+          if (x < L - 1 && bondRight(i, p)) unite(i, i + 1);
+          if (y < L - 1 && bondDown(i, p)) unite(i, i + L);
+        } else {
+          if (x > 0 && parent[i - 1] >= 0) unite(i, i - 1);
+          if (y > 0 && parent[i - L] >= 0) unite(i, i - L);
+        }
       }
     }
 
@@ -226,35 +298,208 @@
     }
     if (opts.dist) distSamples++;
 
+    // The shortest crossing, when one exists. Wanted for the graph on every
+    // sample and for the drawing only when rendering.
+    let chem = 0;
+    if (spanningRoots.size > 0) chem = shortestCrossing(p, spanningRoots, !!opts.render);
+
     return {
       meanFiniteS: sumFin > 0 ? sumFinSq / sumFin : 0,
       pInf: spanSize / N,
       spanning: spanningRoots.size > 0,
       spanSize: spanSize,
+      chem: chem,
       spanningRoots: opts.render ? spanningRoots : null,
     };
+  }
+
+  /*
+   * SHORTEST CROSSING (the chemical distance).
+   *
+   * Breadth-first from every spanning-cluster site on the top row at once —
+   * a multi-source BFS, so the first bottom-row site reached is reached by a
+   * globally shortest path, not merely the shortest from one chosen start.
+   * The number of steps in that path is the chemical distance, which is the
+   * interesting quantity: near p_c it is much longer than the straight-line
+   * L because the crossing has to detour around holes.
+   *
+   * Walking the parent pointers back from the endpoint marks the path for
+   * drawing. Traversal follows whichever adjacency the mode defines, so the
+   * same routine serves both.
+   */
+  function shortestCrossing(p, spanningRoots, markPath) {
+    const bond = mode === 'bond';
+    bfsDist.fill(-1);
+    let head = 0, tail = 0;
+
+    for (let x = 0; x < L; x++) {
+      if (parent[x] >= 0 && spanningRoots.has(find(x))) {
+        bfsDist[x] = 0;
+        bfsPrev[x] = -1;
+        bfsQ[tail++] = x;
+      }
+    }
+
+    const bottom = (L - 1) * L;
+    let endSite = -1;
+    while (head < tail) {
+      const i = bfsQ[head++];
+      if (i >= bottom) { endSite = i; break; }      // first to arrive wins
+      const x = i % L, y = (i / L) | 0;
+
+      // left, right, up, down — gated by the mode's adjacency
+      if (x > 0        && (bond ? bondRight(i - 1, p) : parent[i - 1] >= 0) && bfsDist[i - 1] < 0) {
+        bfsDist[i - 1] = bfsDist[i] + 1; bfsPrev[i - 1] = i; bfsQ[tail++] = i - 1;
+      }
+      if (x < L - 1    && (bond ? bondRight(i, p)     : parent[i + 1] >= 0) && bfsDist[i + 1] < 0) {
+        bfsDist[i + 1] = bfsDist[i] + 1; bfsPrev[i + 1] = i; bfsQ[tail++] = i + 1;
+      }
+      if (y > 0        && (bond ? bondDown(i - L, p)  : parent[i - L] >= 0) && bfsDist[i - L] < 0) {
+        bfsDist[i - L] = bfsDist[i] + 1; bfsPrev[i - L] = i; bfsQ[tail++] = i - L;
+      }
+      if (y < L - 1    && (bond ? bondDown(i, p)      : parent[i + L] >= 0) && bfsDist[i + L] < 0) {
+        bfsDist[i + L] = bfsDist[i] + 1; bfsPrev[i + L] = i; bfsQ[tail++] = i + L;
+      }
+    }
+
+    if (endSite < 0) return 0;
+    const len = bfsDist[endSite] + 1;               // sites visited, not hops
+
+    // Kept as an ordered list, not a per-site flag. Two marked sites can be
+    // lattice neighbours without being CONSECUTIVE on the path (and in bond
+    // mode without even having an open edge between them), so drawing from a
+    // flag array would draw rungs the walker never took.
+    if (markPath) {
+      pathList.length = 0;
+      for (let i = endSite; i >= 0; i = bfsPrev[i]) {
+        pathList.push(i);
+        if (bfsPrev[i] < 0) break;
+      }
+    }
+    return len;
   }
 
   /* ------------------------------------------------------------------ */
   /* Rendering                                                           */
   /* ------------------------------------------------------------------ */
-  function renderCurrent(spanningRoots) {
-    const d = img.data;
-    for (let i = 0; i < N; i++) {
-      let c;
-      if (parent[i] < 0) c = COLOR_EMPTY;
-      else if (spanningRoots.has(find(i))) c = COLOR_SPAN;
-      else c = COLOR_FINITE;
-      const o = i << 2;
-      d[o] = c[0]; d[o + 1] = c[1]; d[o + 2] = c[2];
+  /*
+   * THE TWO MODES ARE DRAWN DIFFERENTLY ON PURPOSE.
+   *
+   * They have to be. In each model one element is random and the other is
+   * just scenery, and it is the opposite element in each case:
+   *
+   *   SITE  the nodes are the coin flips, the edges are automatic.
+   *         So nodes are drawn fat and coloured, links thin and dim —
+   *         chunky blocks joined by necks.
+   *
+   *   BOND  every node exists; the EDGES are the coin flips.
+   *         So the nodes drop back to a faint uniform scaffold and the open
+   *         edges get the weight and the colour — an open wire mesh.
+   *
+   * Colouring the nodes in both modes was the mistake: bond percolation drew
+   * a complete, fully-coloured grid of nodes, which at a glance is just a
+   * site lattice at high p. Putting the emphasis on the random element makes
+   * the two pictures structurally unmistakable, and it is also the honest
+   * reading of each model.
+   *
+   * Rects are accumulated into one Path2D per colour and filled in four
+   * calls, rather than one fill per cell — at L=256 that is ~200k rectangles
+   * a frame, which is fine batched and is not fine otherwise.
+   */
+  function renderCurrent(spanningRoots, showPath) {
+    const bond = mode === 'bond';
+    const p = pDisplay;
+    const cell = CANVAS_PX / L;
+
+    ctx.fillStyle = rgb(COLOR_EMPTY);
+    ctx.fillRect(0, 0, CANVAS_PX, CANVAS_PX);
+
+    // Node and link weights, in canvas pixels. Which one dominates is the
+    // whole visual difference between the modes.
+    const nodeW = bond ? Math.max(1, cell * 0.30) : Math.max(1.5, cell * 0.72);
+    const linkW = bond ? Math.max(1.5, cell * 0.54) : Math.max(1, cell * 0.28);
+    // Below ~4px a scaffold dot is just haze over the mesh; drop it and let
+    // the bonds carry the picture alone.
+    const drawNodes = !bond || cell >= 4;
+
+    const nodeSpan = new Path2D(), nodeFin = new Path2D();
+    const linkSpan = new Path2D(), linkFin = new Path2D();
+    const nh = nodeW / 2, lh = linkW / 2;
+
+    for (let y = 0; y < L; y++) {
+      for (let x = 0; x < L; x++) {
+        const i = y * L + x;
+        if (parent[i] < 0) continue;                    // absent site
+        const span = spanningRoots.has(find(i));
+        const cx = (x + 0.5) * cell, cy = (y + 0.5) * cell;
+
+        // In bond mode every node is present and none of them mean anything,
+        // so they all go in one pile and get the scaffold colour.
+        if (drawNodes) {
+          (bond || !span ? nodeFin : nodeSpan).rect(cx - nh, cy - nh, nodeW, nodeW);
+        }
+
+        if (x < L - 1) {
+          const j = i + 1;
+          const joined = bond ? bondRight(i, p) : (parent[j] >= 0);
+          if (joined && parent[j] >= 0) {
+            (span ? linkSpan : linkFin).rect(cx, cy - lh, cell, linkW);
+          }
+        }
+        if (y < L - 1) {
+          const j = i + L;
+          const joined = bond ? bondDown(i, p) : (parent[j] >= 0);
+          if (joined && parent[j] >= 0) {
+            (span ? linkSpan : linkFin).rect(cx - lh, cy, linkW, cell);
+          }
+        }
+      }
     }
-    ctx.putImageData(img, 0, 0);
+
+    // Whichever element is the smaller goes down first, so the dominant one
+    // reads on top and the joints stay clean.
+    const paintNodes = () => {
+      if (!drawNodes) return;
+      ctx.fillStyle = rgb(bond ? COLOR_SCAFFOLD : COLOR_FINITE);
+      ctx.fill(nodeFin);
+      if (!bond) { ctx.fillStyle = rgb(COLOR_SPAN); ctx.fill(nodeSpan); }
+    };
+    const paintLinks = () => {
+      ctx.fillStyle = rgb(bond ? COLOR_FINITE : COLOR_FINITE_DIM);
+      ctx.fill(linkFin);
+      ctx.fillStyle = rgb(bond ? COLOR_SPAN : COLOR_SPAN_DIM);
+      ctx.fill(linkSpan);
+    };
+    if (bond) { paintNodes(); paintLinks(); }
+    else      { paintLinks(); paintNodes(); }
+
+    // The shortest crossing, last so it reads over everything. Drawn from the
+    // ordered walk, one segment per step actually taken.
+    if (showPath && pathList.length > 1) {
+      const pw = Math.max(1.6, cell * (bond ? 0.54 : 0.40));
+      const ph = pw / 2;
+      const path = new Path2D();
+      for (let k = 0; k < pathList.length; k++) {
+        const i = pathList[k];
+        const x = i % L, y = (i / L) | 0;
+        const cx = (x + 0.5) * cell, cy = (y + 0.5) * cell;
+        path.rect(cx - ph, cy - ph, pw, pw);          // joint
+        if (k + 1 < pathList.length) {
+          const j = pathList[k + 1];
+          const jx = j % L, jy = (j / L) | 0;
+          if (jy === y) path.rect(Math.min(cx, (jx + 0.5) * cell), cy - ph, cell, pw);
+          else          path.rect(cx - ph, Math.min(cy, (jy + 0.5) * cell), pw, cell);
+        }
+      }
+      ctx.fillStyle = COLOR_PATH;
+      ctx.fill(path);
+    }
   }
 
   // Sample + draw at pDisplay using the current field, without accumulating.
   function renderDisplayOnly() {
     const r = computeAt(pDisplay, { render: true });
-    renderCurrent(r.spanningRoots);
+    renderCurrent(r.spanningRoots, r.spanning);
     updateReadout(r);
   }
 
@@ -266,16 +511,21 @@
    * the whole simulation down with it, graphs included.
    */
   function readout(rows) {
-    if (window.Sim && typeof Sim.readout === 'function') Sim.readout(rows);
+    if (window.Sim && typeof window.Sim.readout === 'function') window.Sim.readout(rows);
   }
 
   function updateReadout(r) {
+    const chem = r && r.chem > 0 ? r.chem : 0;
     readout([
       ['lattice', L + ' \u00d7 ' + L],
+      ['type', MODES[mode].label + ' percolation'],
       ['p', pDisplay.toFixed(3)],
+      ['p_c', MODES[mode].pc.toFixed(mode === 'bond' ? 1 : 6) + (MODES[mode].pcExact ? ' (exact)' : '')],
       ['cycles', cycle.toLocaleString()],
       ['spanning', r ? (r.spanning ? 'yes' : 'no') : '\u2014', r && r.spanning],
       ['P\u221e', r ? r.pInf.toFixed(3) : null],
+      ['shortest path', chem ? chem.toLocaleString() + ' sites' : null],
+      ['\u2113 / L', chem ? (chem / L).toFixed(2) : null, true],
     ]);
   }
 
@@ -290,6 +540,9 @@
     if (r.spanning) spanCnt[sweepPos] += 1;
     sumS[sweepPos] += r.meanFiniteS;
     sumPinf[sweepPos] += r.pInf;
+    // Only spanning states have a crossing to measure, so this curve is
+    // averaged over its own count rather than over all cycles.
+    if (r.spanning && r.chem > 0) { sumChem[sweepPos] += r.chem; chemCnt[sweepPos] += 1; }
     sweepPos++;
   }
 
@@ -297,7 +550,8 @@
   // then draw a brand-new random field for the next cycle.
   function doDisplay() {
     const r = computeAt(pDisplay, { dist: true, render: true });
-    renderCurrent(r.spanningRoots);
+    renderCurrent(r.spanningRoots, r.spanning);
+    lastChem = r.chem;
     updateReadout(r);
     cycle++;
     newField();
@@ -393,7 +647,14 @@
   const params = document.getElementById('sim-params');
   params.innerHTML =
     '<div class="control">' +
-    '  <label>p (occupation)</label>' +
+    '  <label>Percolation on</label>' +
+    '  <div class="seg" role="group" aria-label="Percolation type">' +
+    '    <button type="button" class="seg-btn" data-mode="site" aria-pressed="true">Sites</button>' +
+    '    <button type="button" class="seg-btn" data-mode="bond" aria-pressed="false">Edges</button>' +
+    '  </div>' +
+    '</div>' +
+    '<div class="control">' +
+    '  <label id="p-label">p (occupation)</label>' +
     '  <div class="p-row">' +
     '    <input type="range" id="p-range" min="0" max="1" step="0.001">' +
     '    <input type="text" id="p-num" inputmode="decimal">' +
@@ -407,6 +668,27 @@
     '  <label>Speed: <span id="speed-val"></span></label>' +
     '  <input type="range" id="speed-range" min="0.5" max="30" step="0.5">' +
     '</div>';
+
+  /*
+   * Switching between sites and bonds changes the threshold, the adjacency
+   * and therefore every statistic, so it starts over. p_c moves from 0.5927
+   * to exactly 1/2, and the dotted marker on the graphs follows it.
+   */
+  const modeBtns = Array.prototype.slice.call(params.querySelectorAll('[data-mode]'));
+  const pLabel = document.getElementById('p-label');
+
+  function setMode(m) {
+    if (!MODES[m] || m === mode) return;
+    mode = m;
+    pLabel.textContent = mode === 'bond' ? 'p (bond open)' : 'p (occupation)';
+    for (const b of modeBtns) b.setAttribute('aria-pressed', String(b.dataset.mode === mode));
+    buildGraphs();       // the p_c marker and the caption text both move
+    reset();
+  }
+
+  for (const b of modeBtns) {
+    b.addEventListener('click', () => setMode(b.dataset.mode));
+  }
 
   const pRange = document.getElementById('p-range');
   const pNum = document.getElementById('p-num');
@@ -470,10 +752,13 @@
   }
 
   // Vertical p_c reference line for the p-axis plots.
-  const pcLine = {
-    type: 'line', x0: P_CRIT, x1: P_CRIT, y0: 0, y1: 1, yref: 'paper',
-    line: { color: ACCENT, width: 1, dash: 'dot' },
-  };
+  // Rebuilt with the graphs, since p_c moves when the mode does.
+  function pcShape() {
+    return {
+      type: 'line', x0: pc(), x1: pc(), y0: 0, y1: 1, yref: 'paper',
+      line: { color: ACCENT, width: 1, dash: 'dot' },
+    };
+  }
 
 
   /*
@@ -504,6 +789,7 @@
       figure('g-dist',  GRAPHS.dist.title) +
       figure('g-pinf',  GRAPHS.pinf.title) +
       figure('g-span',  GRAPHS.span.title) +
+      figure('g-chem',  GRAPHS.chem.title) +
       '</div>';
 
     const cfg = { responsive: true, displayModeBar: false };
@@ -517,7 +803,7 @@
     Plotly.newPlot('g-meanS',
       [trace('meanS')],
       baseLayout(GRAPHS.meanS.title, GRAPHS.meanS.xlabel, GRAPHS.meanS.ylabel,
-        pAxis, { tickformat: '~e' }, { shapes: [pcLine] }), cfg);
+        pAxis, { tickformat: '~e' }, { shapes: [pcShape()] }), cfg);
 
     Plotly.newPlot('g-dist',
       [{ x: [], y: [], mode: 'markers', marker: GRAPHS.dist.marker }],
@@ -526,12 +812,25 @@
     Plotly.newPlot('g-pinf',
       [trace('pinf')],
       baseLayout(GRAPHS.pinf.title, GRAPHS.pinf.xlabel, GRAPHS.pinf.ylabel,
-        pAxis, unitAxis, { shapes: [pcLine] }), cfg);
+        pAxis, unitAxis, { shapes: [pcShape()] }), cfg);
 
     Plotly.newPlot('g-span',
       [trace('span')],
       baseLayout(GRAPHS.span.title, GRAPHS.span.xlabel, GRAPHS.span.ylabel,
-        pAxis, unitAxis, { shapes: [pcLine] }), cfg);
+        pAxis, unitAxis, { shapes: [pcShape()] }), cfg);
+
+    /*
+     * The shortest crossing, in units of L. Below p_c there is usually no
+     * crossing at all so the curve simply has no points; just above it the
+     * path is long and winding, and it falls towards the straight-line 1 as
+     * p rises and the cluster fills in. The dotted horizontal is that
+     * straight-line minimum — the path can never be shorter.
+     */
+    Plotly.newPlot('g-chem',
+      [trace('chem'),
+       { x: [0, 1], y: [1, 1], mode: 'lines', line: GRAPHS.chem.straight, hoverinfo: 'skip' }],
+      baseLayout(GRAPHS.chem.title, GRAPHS.chem.xlabel, GRAPHS.chem.ylabel,
+        pAxis, { exponentformat: 'none' }, { shapes: [pcShape()] }), cfg);
 
     graphsReady = true;
   }
@@ -546,6 +845,10 @@
       yc[k] = n > 0 ? sumPinf[k] / n : null;
       yd[k] = n > 0 ? spanCnt[k] / n : null;
     }
+    const ye = new Array(NP);
+    for (let k = 0; k < NP; k++) ye[k] = chemCnt[k] > 0 ? sumChem[k] / chemCnt[k] / L : null;
+    Plotly.restyle('g-chem', { y: [ye] }, [0]);
+
     Plotly.restyle('g-meanS', { y: [ya] }, [0]);
     Plotly.restyle('g-pinf', { y: [yc] }, [0]);
     Plotly.restyle('g-span', { y: [yd] }, [0]);

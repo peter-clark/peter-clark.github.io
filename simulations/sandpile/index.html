@@ -4,39 +4,93 @@ title: Abelian Sandpile
 sim_id: sandpile
 plotly: true
 description: >
-  Drop grains of sand onto a grid. When a cell accumulates four or more grains
-  it topples, sending one grain to each neighbour — which may trigger further
-  topples in a chain reaction. The Bak–Tang–Wiesenfeld model is the original
-  example of self-organized criticality, producing scale-free avalanches and
-  striking fractal patterns.
+  Drop grains of sand onto a grid. When a cell reaches the toppling threshold it
+  gives one grain to each neighbour, which may push those neighbours over in
+  turn. The Bak-Tang-Wiesenfeld model is the original example of self-organized
+  criticality, producing scale-free avalanches and fractal patterns.
+
+  How it works: Start drops grains one at a time at the chosen site. Each site
+  holds grains below the threshold at rest, drawn as increasing brightness; a
+  site that reaches the threshold topples and distributes one grain to each of
+  its neighbours. Grains that topple off the edge are lost, and that open
+  boundary is what lets the pile reach a steady state rather than filling
+  forever. The graphs average over all avalanches and demonstrate convergence to
+  the critical density as the simulation progresses.
+references:
+  - authors: Bak, P., Tang, C. & Wiesenfeld, K.
+    year: 1987
+    title: "Self-organized criticality: an explanation of the 1/f noise"
+    where: Phys. Rev. Lett. 59, 381-384
+    doi: 10.1103/PhysRevLett.59.381
+    note: the model
+  - authors: Bak, P., Tang, C. & Wiesenfeld, K.
+    year: 1988
+    title: Self-organized criticality
+    where: Phys. Rev. A 38, 364-374
+    doi: 10.1103/PhysRevA.38.364
+    note: the full treatment
+  - authors: Dhar, D.
+    year: 1990
+    title: Self-organized critical state of sandpile automaton models
+    where: Phys. Rev. Lett. 64, 1613-1616
+    doi: 10.1103/PhysRevLett.64.1613
+    note: proof of the abelian property
+  - authors: Grassberger, P. & Manna, S. S.
+    year: 1990
+    title: Some more sandpiles
+    where: J. Phys. France 51, 1077-1098
+    note: source of the critical density 2.125 for the 4-neighbour rule
 ---
 
-<!-- Body content renders BELOW the two graphs. Edit freely. -->
+<!-- Body content renders BELOW the two graphs -->
 <div class="text-justify" style="margin-top: 26px;">
 <h3>How it works</h3>
 <p>
-Press <strong>Start</strong> to begin dropping grains. Each site holds 0–3 grains
-at rest, drawn as increasing brightness — an empty site is nearly black, a site
-holding 3 is full orange and one grain away from toppling. A site that reaches 4
-gives one grain to each of its four neighbours, which can push them over in turn.
-Relaxation is shown as <em>parallel sweeps</em>, so you watch the avalanche front
-travel outward a ring at a time; cells flash pale while they are mid-topple.
-Grains that fall off the edge are lost, and that leak is what lets the pile reach
-a steady state rather than filling forever.
+<strong>Start</strong> drops grains one at a time at the chosen site. Each site
+holds grains below the toppling threshold at rest, drawn as increasing
+brightness: an empty site is nearly black and a site one grain short of toppling
+is full orange. A site that reaches the threshold gives one grain to each of its
+neighbours, which can push them over in turn. Grains that topple off the edge are
+lost, and that leak is what lets the pile reach a steady state.
 </p>
 <p>
-The striking thing is that nothing here is tuned. Start from an empty lattice, a
-half-full one, or a maximally full one — the pile drives <em>itself</em> to the
-same critical density of about 2.125 grains per site, and stays there. Dropping
-at the centre builds the familiar fractal target; dropping at random sites gives
-cleaner avalanche statistics, since every site gets its turn as the seed.
+Relaxation is shown as parallel sweeps: every unstable site topples at once, then
+the next sweep runs, so the avalanche front travels outward a ring at a time and
+the sweep count gives the avalanche duration. The resting configuration reached
+is independent of the order in which topples are performed, which is the abelian
+property the model is named for<sup class="sim-cite"><a href="#ref-3">[3]</a></sup>.
 </p>
-<p><em>Graphs:</em>
-(a) the avalanche-size distribution N(s) on log-log axes — at criticality this is
-a straight line, meaning avalanches have no characteristic size, and a single
-grain can set off anything from nothing to a system-spanning cascade;
-(b) mean height against avalanche number, the self-organization itself, with the
-critical density marked as a dotted line. Watch it climb from an empty start or
-fall from a full one, then sit on the line.
+
+<h3>Variants:</h3>
+<p>
+<strong>Ruleset</strong> selects the neighbourhood. The classic rule topples to
+the 4 edge-neighbours at a threshold of 4; the Moore variant feeds the 4
+diagonals as well, and the threshold rises to 8 with it, because a toppling site
+gives exactly one grain to each neighbour it has. A higher threshold means taller
+resting piles: heights run 0&ndash;3 under the 4-rule and 0&ndash;7 under the
+8-rule, and the critical density roughly doubles, from $\rho_c \simeq 2.125$ to a
+measured 4.45.
 </p>
+<p>
+<strong>Drop site</strong> is the centre or a uniformly random site.
+Centre-dropping builds the fractal target pattern; random dropping gives cleaner
+avalanche statistics, since every site takes a turn as the seed.
+<strong>Initial state</strong> sets the lattice empty, half full, maximally full,
+or random. The pile reaches the same critical density from all four, which is the
+self-organization: nothing here is tuned to a critical point.
+</p>
+
+<h3>Graphs:</h3>
+<p>
+<strong class="sim-key">(a)</strong> avalanche-size distribution N(s), the
+log-binned frequency of avalanches of s topples on log-log axes. A straight line
+means avalanches have no characteristic size, so a single grain can set off
+anything from nothing to a system-spanning cascade. The cutoff at large s is set
+by the lattice size.<br>
+<strong class="sim-key">(b)</strong> mean height $\langle h \rangle$ against
+avalanche number, the self-organization itself. The dotted line is the critical
+density for the active ruleset. The curve climbs to it from an empty start or
+falls to it from a full one, then stays there.
+</p>
+
 </div>

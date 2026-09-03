@@ -2,6 +2,65 @@
 layout: default
 ---
 
+{% comment %}
+============================================================
+SIMULATION PAGE — front matter and house style.
+
+FRONT MATTER
+  title        page heading
+  sim_id       loads assets/js/simulations/<sim_id>.js
+  plotly       true -> pull in Plotly for live graphs
+  description  the standing summary, rendered above the canvas
+  references   list of works cited (see below); omit if none
+
+STRUCTURE OF THE BODY
+  Keep to these three sections, in this order:
+    <h3>How it works</h3>   what the model does, per tick/cycle
+    <h3>Variants:</h3>      the options in the control panel
+    <h3>Graphs:</h3>        one line per figure, in grid order
+
+  Graph entries are marked with the shared key class so the
+  letters match the (a)/(b)/(c) counters on the figures:
+    <strong class="sim-key">(a)</strong> quantity; what it shows.<br>
+
+  Write plainly and factually. State what the model does and
+  what the reader is looking at. Leave out implementation
+  detail, design rationale and anything addressed to "you" —
+  that belongs in the comments of the .js file.
+
+REFERENCES
+  references:
+    - authors: Drossel, B. & Schwabl, F.
+      year: 1992
+      title: Self-organized critical forest-fire model
+      where: Phys. Rev. Lett. 69, 1629-1632
+      doi: 10.1103/PhysRevLett.69.1629   # optional
+      url: https://example.org/           # optional, if no doi
+      note: source of the growth rule     # optional, what it backs
+  Cite in the prose with  <sup class="sim-cite"><a href="#ref-2">[2]</a></sup>
+  numbered in the order the list is written.
+
+MATHS AND SCIENTIFIC CHARACTERS
+  MathJax v3 is loaded on every simulation page, so LaTeX
+  between single dollars is typeset anywhere in the body:
+    $p_c$   $P_\infty$   $\langle r^2 \rangle$   $t^{-3/2}$
+    $\Pi(p)$  $\ell/L$  $n_s$  $\sqrt{t}$  $\propto$  $\approx$
+    $\rho \simeq 2.125$   $f/p \ll 1$   $s^{-\tau}$
+  In .js graph labels the same syntax applies, but backslashes
+  must be doubled: ylabel: '$\\langle h \\rangle$'.
+
+  For a lone symbol in running text, an entity is lighter than
+  MathJax and does not reflow the line:
+    &alpha; &beta; &tau; &rho; &sigma; &Pi; &Delta; &nabla;
+    &infin; &plusmn; &times; &middot; &ne; &le; &ge; &asymp;
+    &rarr; &harr; &lang; &rang; &prop; &sum; &int; &part;
+    &ell; (script l)   &#8202; (hair space)   &minus; (true minus)
+  Sub- and superscripts: p<sub>c</sub>, t<sup>-3/2</sup>, 10<sup>4</sup>.
+  Prefer MathJax for anything with structure, entities for
+  single glyphs sitting in a sentence.
+============================================================
+{% endcomment %}
+
 <p><a href="/simulations/">&laquo; All simulations</a></p>
 
 {% if page.description %}
@@ -40,13 +99,39 @@ layout: default
 
 {{ content }}
 
-{% if page.plotly %}
-<!-- MathJax v3 lets Plotly render $...$ LaTeX in axis labels, and (unlike v2)
-     keeps re-rendering them as the plots update. Must load before Plotly. -->
+{% if page.references %}
+<!-- Works cited, at the foot of the main panel. Written as `references:` in
+     the page's front matter; see the note at the top of this layout. -->
+<div class="sim-refs">
+    <h3>References</h3>
+    <ol>
+        {% for r in page.references %}
+        <li id="ref-{{ forloop.index }}">
+            <span class="sim-ref-who">{{ r.authors }}{% if r.year %} ({{ r.year }}){% endif %}.</span>
+            {% if r.doi %}<a href="https://doi.org/{{ r.doi }}">{{ r.title }}</a>{%
+            elsif r.url %}<a href="{{ r.url }}">{{ r.title }}</a>{%
+            else %}{{ r.title }}{% endif %}.
+            {% if r.where %}<span class="sim-ref-where">{{ r.where }}.</span>{% endif %}
+            {% if r.note %}<span class="sim-ref-note">{{ r.note }}</span>{% endif %}
+        </li>
+        {% endfor %}
+    </ol>
+</div>
+{% endif %}
+
+<!-- MathJax v3 renders $...$ LaTeX in the prose above AND in Plotly's axis
+     labels, and (unlike v2) keeps re-rendering the latter as plots update.
+     Loaded for every simulation, not just the plotted ones, so a page can
+     write maths whether or not it has graphs. Must come before Plotly. -->
 <script>
-  window.MathJax = { tex: { inlineMath: [['$', '$']] }, svg: { fontCache: 'local' } };
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$']], processEscapes: true },
+    svg: { fontCache: 'local' },
+  };
 </script>
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
+
+{% if page.plotly %}
 <!-- Plotly is only pulled in on pages that set `plotly: true` in front matter. -->
 <script src="https://cdn.plot.ly/plotly-2.27.0.min.js" charset="utf-8"></script>
 {% endif %}

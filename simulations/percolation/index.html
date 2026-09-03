@@ -6,27 +6,74 @@ plotly: true
 description: >
   Each cell of a square lattice is independently occupied with probability p.
   Below a critical p the occupied cells form only small, isolated clusters;
-  above it a single cluster suddenly spans the whole system. Watch the giant
-  cluster appear as you sweep p across the percolation threshold (~0.5927 for
+  above it a single cluster spans the whole system. This is called an infinite spanning cluster. Watch the giant
+  cluster appear as you sweep p across the percolation threshold (~0.5927.. for
   site percolation on a square lattice).
+
+  How it works: Start runs a repeated sweep over site/edge occupation probabilities p. 
+  The graphs average over all cycles and demonstrate convergence to theoretically predicted values as the simulation progresses. 
+  The lattice shown is sampled at exactly the given p and the orange cluster, when present, is the one spanning top to bottom, and the 
+  white line traced through it is the shortest crossing (lattice view is cropped by visual elements).
+references:
+  - authors: Broadbent, S. R. & Hammersley, J. M.
+    year: 1957
+    title: "Percolation processes: I. Crystals and mazes"
+    where: Math. Proc. Camb. Phil. Soc. 53, 629-641
+    doi: 10.1017/S0305004100032680
+    note: the model
+  - authors: Kesten, H.
+    year: 1980
+    title: The critical probability of bond percolation on the square lattice equals 1/2
+    where: Commun. Math. Phys. 74, 41-59
+    doi: 10.1007/BF01197577
+    note: proof that the edge threshold is exactly 1/2
+  - authors: Newman, M. E. J. & Ziff, R. M.
+    year: 2000
+    title: Efficient Monte Carlo algorithm and high-precision results for percolation
+    where: Phys. Rev. Lett. 85, 4104-4107
+    doi: 10.1103/PhysRevLett.85.4104
+    note: source of the site value 0.5927460
+  - authors: Herrmann, H. J. & Stanley, H. E.
+    year: 1988
+    title: The fractal dimension of the minimum path in two- and three-dimensional percolation
+    where: J. Phys. A 21, L829-L833
+    doi: 10.1088/0305-4470/21/17/003
+    note: the shortest crossing, graph (e)
 ---
 
-<!-- Body content renders BELOW the four graphs. Edit freely. -->
+<!-- Body content renders BELOW the four graphs -->
 <div class="text-justify" style="margin-top: 26px;">
 <h3>How it works</h3>
 <p>
-Press <strong>Start</strong> to run a repeated sweep over p. Each cycle draws one
-random field for the whole lattice and visits every p on a fixed grid, labelling
-clusters with union-find; the four graphs average over all cycles and converge as
-it runs. The lattice shown is sampled at exactly the <strong>p</strong> you set
-(slider or type a value) — the red cluster, when present, is the one spanning top
-to bottom. Larger lattices sharpen the transition near
-p<sub>c</sub> ≈ 0.5927 (dotted red line) but cost more per frame.
+<strong>Start</strong> runs a repeated sweep over site/edge occupation probabilities p. 
+The graphs average over all cycles and demonstrate convergence to theoretically predicted values as the simulation progresses. 
+The lattice shown is sampled at exactly the given <strong>p</strong> and
+the orange cluster, when present, is the one spanning top to bottom, and the
+<strong>white line</strong> traced through it is the shortest crossing.
 </p>
-<p><em>Graphs:</em>
-(a) mean finite cluster size S(p);
-(b) cluster-size distribution n<sub>s</sub> at the displayed p (log-log, ~power law at p<sub>c</sub>);
-(c) percolation strength P<sub>∞</sub>(p), the fraction of sites in the spanning cluster;
-(d) spanning probability Π(p), the fraction of sampled states that percolate.
+
+<h3>Sites or Edges:</h3>
+<p>
+<strong>Site</strong> percolation occupies each site on the lattice with probability p
+and joins occupied neighbours. <strong>Edge</strong> percolation keeps every site
+and opens the <em>edges</em> between them with probability p. They are different
+models with different critical percolation thresholds, with the threshold for edge percolation being exact p<sub>c</sub> = 1/2<sup class="sim-cite"><a href="#ref-2">[2]</a></sup>,
+against 0.5927… for site percolation, a numerically calculated value<sup class="sim-cite"><a href="#ref-3">[3]</a></sup>.
 </p>
+<h3>Graphs:</h3>
+<p>
+<strong class="sim-key">(a)</strong> mean finite cluster size S(p); Average cluster size (# of included sites/edges) of all finite clusters. Infinite clusters 
+are not included in the calculation. At probabilities higher than the critical threshold P<sub>c</sub> [orange dashed line], average finite clusters <strong>not</strong>
+included in spanning cluster.<br>
+<strong class="sim-key">(b)</strong> cluster-size distribution n<sub>s</sub> at the given probability p (log-log, ~power law at p<sub>c</sub>); 
+There exists large amounts of small clusters and few large clusters.<br>
+<strong class="sim-key">(c)</strong> percolation strength P<sub>∞</sub>(p), the fraction of sites included the infinite spanning cluster. 
+Below the critical threshold, since there is no spanning cluster, the value is 0; <br>
+<strong class="sim-key">(d)</strong> spanning probability Π(p), the fraction of sampled states that percolate / contain a spanning cluster. The orange dashed line is the 
+theoretical (or numerically calculated) critical threshold value P<sub>c</sub>; <br>
+<strong class="sim-key">(e)</strong> the shortest crossing $\ell/L$, averaged over the states that span<sup class="sim-cite"><a href="#ref-4">[4]</a></sup>. Below
+p<sub>c</sub> there exists few spanning clusters which are resultant of the finite size of the lattice used for the simulation, 
+so the data starts where spanning clusters begin to appear in the simulation runs.
+</p>
+
 </div>

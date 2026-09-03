@@ -367,6 +367,12 @@ $sim-gap:    16px;
   flex-direction: column;
 }
 
+/* Five graphs in a two-column grid leaves a hole; let a lone last figure
+   take the full width instead. Applies to any simulation with an odd count. */
+.sim-graph-grid:not(.single) .sim-figure:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+
 .sim-caption {
   margin-top: 7px;
   padding: 0 2px;
@@ -410,3 +416,70 @@ $sim-gap:    16px;
 }
 
 .sim-note { color: $c-text-dim; }
+
+/* ---- Graph key ----------------------------------------------
+   The (a) (b) (c) markers in the prose that walks through the
+   figures. Same accent and weight as the counters generated on
+   the captions themselves, so a reader can match the two by eye.
+   Written as <strong class="sim-key">(a)</strong>.
+   -------------------------------------------------------------- */
+.sim-key {
+  color: $c-accent;
+  font-weight: bold;
+}
+
+/* ---- Citations ----------------------------------------------
+   An inline marker in the prose, and the numbered list of works
+   at the foot of the panel. The list is built by the layout from
+   the page's `references:` front matter, so adding a citation is
+   a data change and never a markup one.
+   -------------------------------------------------------------- */
+.sim-cite {
+  font-size: 0.8em;
+  line-height: 0;          // keeps the marker from opening the line
+
+  a {
+    color: $c-accent;
+    text-decoration: none;
+
+    &:hover { text-decoration: underline; }
+  }
+}
+
+.sim-refs {
+  margin-top: 30px;
+  padding-top: 4px;
+  color: $c-text-ui-dim;
+
+  h3 { margin-bottom: 8px; }
+
+  ol {
+    margin: 0;
+    padding-left: 22px;
+  }
+
+  li {
+    margin-bottom: 7px;
+    line-height: 1.45;
+
+    /* The anchor a <sup> marker jumps to. Without the offset the
+       heading lands flush against the top of the viewport. */
+    scroll-margin-top: 20px;
+
+    &:target { color: $c-text-ui; }
+  }
+
+  a { text-decoration: none; }
+  a:hover { text-decoration: underline; }
+}
+
+.sim-ref-who { color: $c-text-ui; }
+
+.sim-ref-where { color: $c-text-dim; }
+
+.sim-ref-note {
+  color: $c-text-dim;
+  font-style: italic;
+
+  &::before { content: "— "; }
+}
