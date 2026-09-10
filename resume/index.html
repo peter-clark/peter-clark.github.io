@@ -6,24 +6,24 @@ title: CV
 <!-- ============================================================
      CV / RESUME PAGE
 
-     Mirrors CV_PETERCLARK.docx. When the document changes, change
-     this page — the two are meant to say the same thing.
+     Mirrors CV_PETERCLARK.docx and carries nothing the document
+     does not. When the document changes, change this page — the
+     two are meant to say the same thing, and anything here that
+     is not in the document is drift.
 
      Section order follows the document: positioning line, Selected
      Projects, Technical Skills, Experience, Education, Additional.
 
-     Each entry is a <dl> block. Copy the template at the very
-     bottom of this file to add a job, project or degree, and put
-     <hr class="small" /> between entries.
-
      NOT ON THIS PAGE, DELIBERATELY: phone number and NIE. They are
      on the document, which goes to named recipients; this page is
-     public and indexed. Email and profile links are enough here.
+     public and indexed.
+
+     Entry template is at the bottom of this file.
      ============================================================ -->
 
 <p class="text-justify">
 Computational modelling of complex systems — building and validating statistical
-models of human and collective behaviours against noisy empirical data. MSc
+models of human and collective behaviors against noisy empirical data. MSc
 Physics of Complex Systems (Universitat de Barcelona), with degrees in Artificial
 Intelligence, Philosophy of Science, and Sound &amp; Music Computing. Interested
 in the intersection of Physics and AI.
@@ -46,14 +46,15 @@ Selected Projects
 
 <dl>
   <br>
-  <dt>Published July 23, 2026</dt>
-  <dd class="inline-heading"><h2 class="inline-heading"><strong>Investigating Human Tapping Behavior to Polyphonic Rhythm Patterns: Data, Models, and Insights</strong></h2></dd>
+  <dt>July 23, 2026</dt>
+  <dd class="inline-heading"><h2 class="inline-heading"><strong>Tapping into Rhythm: How Polyphonic Drum Patterns Map to Monophonic Contours and Support Pattern Retrieval</strong></h2></dd>
   <dd>Gómez-Marín, D., Clark, P., Jordà, S., Herrera, P. (2026). <i>Music &amp; Science</i> (SAGE).
-      <a href="https://doi.org/10.1177/20592043261466428">DOI</a></dd>
+      <a href="https://doi.org/10.1177/20592043261466428">DOI</a> &nbsp;·&nbsp;
+      <a href="https://orcid.org/0009-0002-1106-3894">ORCID 0009-0002-1106-3894</a></dd>
     <ul>
-      <li>Original research modelling how listeners reduce polyphonic drum patterns into simplified monophonic rhythm contours, relating those contours to metrical structure, syncopation and frequency-weighted onset density.</li>
-      <li>Continuation of Master's Thesis; designed experimental conditions using Python and PureData hosted locally. Carried out in-person experiment consisting of 43 participants with 32 trials each. Created data pipeline from collection to statistical and machine learning analyses using <i>Pandas, TensorFlow, NumPy and SciPy</i>.</li>
-      <li>Improved state-of-the-art performance for force-sensitive metrical reproduction prediction up to Spearman correlation of 0.93 from 0.82. Validated prediction models showing preservation of rhythm-space neighbourhood structure.</li>
+      <li>Studied how listeners compress polyphonic rhythm into a single one-dimensional contour, and which rhythmic features drive it. Continuation of MSc thesis.</li>
+      <li>Built the force-sensitive capture system (Python, Pure Data); collected 4,128 taps from 43 participants. Mixed-effects modelling identified frequency-weighted onset density (FWOD) as the dominant predictor.</li>
+      <li>Trained neural regressors (PyTorch) mapping contours to coordinates in a 2-D similarity space of 1,513 drum patterns. FWOD best of three representations: R² = 0.79, Spearman ρ = 0.93, 89.6% localised within 10%.</li>
     </ul>
 </dl>
 <br>
@@ -64,10 +65,9 @@ Selected Projects
   <dt>Ongoing</dt>
   <dd class="inline-heading"><h2 class="inline-heading"><strong>Interactive complex-systems and physics simulations</strong></h2>,      <h3 class="inline-heading"><strong> <i><a href="/simulations/">neocorax.com</a></i></strong></h3></dd>
     <ul>
-      <li>Built browser-based statistical-physics simulations, reproducing theoretical thresholds and critical exponents: site &amp; edge percolation recovering the spanning transitions at p<sub>c</sub> &asymp; 0.5927 and p<sub>c</sub> = 1/2 respectively; random walks showing Brownian motion in multiple dimensions; the Bak–Tang–Wiesenfeld sandpile model, self-organising to &rho;<sub>c</sub> &asymp; 2.125 with avalanches of scale-free nature; the Drossel–Schwabl forest-fire model, showing that fire sizes follow a power-law distribution.</li>
-      <li>Engineered the compute path for interactive frame rates on lattices to 256×256 (65,536 sites), ensembles to 20,000 walkers, and a 101-point parameter sweep per realisation; union-find with path halving for cluster labelling, multi-source BFS for the shortest crossing, typed arrays throughout, and batched Path2D fills for rendering, resulting in seamless animation across devices and network speeds.</li>
-      <li>Key Skills: <i>JavaScript (Canvas 2D), Plotly, Jekyll/SCSS, HTML, CSS</i></li>
-      <li>Source: <a href="https://github.com/peter-clark/peter-clark.github.io/tree/master/assets/js/simulations">github.com/peter-clark/peter-clark.github.io</a></li>
+      <li>Built browser-based statistical-physics simulations, reproducing theoretical thresholds and critical exponents: site &amp; edge percolation recovering the spanning transitions at p<sub>c</sub> &asymp; 0.5927 and p<sub>c</sub> = 0.5 respectively; random walks showing Brownian motion in multiple dimensions; Bak–Tang–Wiesenfeld sandpile model, self-organizing to &rho;<sub>c</sub> = 2.125, avalanches of scale-free nature; forest-fire model implementing the Drossel–Schwabl model showing that fire sizes follow a power-law distribution.</li>
+      <li>Engineered the compute path for interactive frame rates on lattices to 256×256 (65,536 sites), ensembles to 20,000 walkers, and a 101-point parameter sweep per realization; union-find with path halving for cluster labelling, multi-source BFS for the shortest crossing, typed arrays throughout, and batched Path2D fills for rendering, resulting in seamless animation on many devices and network speeds.</li>
+      <li>Stack — JavaScript (Canvas 2D), Plotly, Jekyll/SCSS, HTML, CSS</li>
     </ul>
 </dl>
 <br>
@@ -78,7 +78,7 @@ Selected Projects
   <dt>Ongoing</dt>
   <dd class="inline-heading"><h2 class="inline-heading"><strong>MSc Thesis</strong></h2>,      <h3 class="inline-heading"><strong> <i>Real World Complex Network Geometry</i></strong></h3></dd>
     <ul>
-      <li>Dynamics on hyperbolic metric spaces underlying real-world complex network architectures.</li>
+      <li>Area: hyperbolic geometry of real-world complex networks; embedding and network dynamics.</li>
     </ul>
 </dl>
 <br><br>
@@ -94,9 +94,9 @@ Technical Skills
   <dt>Programming Languages</dt>
   <dd>Python, C</dd>
   <dt>Scientific Computing</dt>
-  <dd>NumPy, SciPy, Pandas, numba, Jupyter, NetworkX, SymPy, NetLogo, TensorFlow, CUDA, JAX, jit</dd>
-  <dt>Tooling</dt>
-  <dd>git, Linux, pytest, Docker, CI, OOP, Claude, Codex</dd>
+  <dd>NumPy, SciPy, Pandas, numba, NetworkX, SymPy, NetLogo, TensorFlow, PyTorch, JAX</dd>
+  <dt>Skills</dt>
+  <dd>git, Linux, pytest, Docker, CI</dd>
 </dl>
 <br><br>
 
@@ -108,14 +108,13 @@ Experience
 
 <dl>
   <br>
-  <dt>Nov. 2024 - Present</dt>
+  <dt>02/2021 – Present</dt>
   <dd class="inline-heading"><h2 class="inline-heading"><strong>Data Analyst / Engineer</strong></h2>,      <h3 class="inline-heading"><strong> <i>Clark Global Group LLC</i></strong></h3></dd>
   <dd>Spain &nbsp;·&nbsp; The Lake Clinic (NGO), Siem Reap, Cambodia</dd>
     <ul>
-      <li>Produced detailed reports from 1500+ electronic medical records over a 5-year period regarding rural paediatric health, spanning 13 villages on a country-wide scale, in alignment with CDC baselines. Presented to local health and NGO professionals, highlighting critical public health concerns.</li>
-      <li>Developed data processing pipelines reducing time spent on repeat-process tasks for organisation of the American Physical Therapy Association conference, including delegation of 1000+ paper abstract reviews to relevant reviewers.</li>
-      <li>Ran workshop for practical AI education and integration for company leadership, focused on process standardisation and applicability to internal and external organisational gaps.</li>
-      <li>Key Skills: <i>SQL, Python, Pandas, Matplotlib, Claude</i></li>
+      <li>Produced detailed reports from 1500+ electronic medical records over a 5-year period regarding rural pediatric health spanning 13 villages on a country-wide scale, in alignment with CDC baselines. Presented to local health and NGO professionals highlighting critical public health concerns. Stack SQL, Python, pandas, Matplotlib.</li>
+      <li>Developed data processing pipelines reducing time spent on repeat-process tasks for organization of American Physical Therapy Association conference, including delegation of 1000+ paper abstract reviews to relevant reviewers.</li>
+      <li>Ran workshop for practical AI-education and integration for company leadership, focused on process standardization, applicability to internal and external organizational gaps.</li>
     </ul>
 </dl>
 <br>
@@ -123,11 +122,12 @@ Experience
 <br>
 
 <dl>
-  <dt>Mar. 2023 - Aug. 2024</dt>
+  <dt>02/2023 – 08/2024</dt>
   <dd class="inline-heading"><h2 class="inline-heading"><strong>Research Associate</strong></h2>,      <h3 class="inline-heading"><strong> <i>Multi-Modal Music Interaction Lab</i></strong></h3></dd>
   <dd>Universitat Pompeu Fabra, Barcelona, Spain</dd>
     <ul>
-      <li>Designed and built data pipeline intaking direct human–computer interaction data, processing and analysing with a custom-built neural network, and visually outputting experimentally verified music-similarity results in a navigable computer interface for music production.</li>
+      <li>Designed and built the data pipeline: direct human–computer interaction capture, processing and analysis with custom-built neural networks, and visual output of experimentally verified music-similarity results to a preexisting navigable interface for music production.</li>
+      <li>Extended usability of approach validated in the study above with real-time tap-to-retrieval loop, interpolation within the embedding to generate new patterns, while testing non-discretized real-time input with different machine learning architectures.</li>
     </ul>
 </dl>
 <br>
@@ -135,7 +135,7 @@ Experience
 <br>
 
 <dl>
-  <dt>Feb. 2023 - Ongoing</dt>
+  <dt>03/2024 – Ongoing</dt>
   <dd class="inline-heading"><h2 class="inline-heading"><strong>Scientific Committee Member</strong></h2>,      <h3 class="inline-heading"><strong> <i>UPF-BMAT Chair on AI and Music</i></strong></h3></dd>
   <dd>Universitat Pompeu Fabra, Barcelona, Spain</dd>
     <ul>
@@ -147,12 +147,11 @@ Experience
 <br>
 
 <dl>
-  <dt>Sept. 2018 - July 2021</dt>
+  <dt>09/2018 – 08/2022</dt>
   <dd class="inline-heading"><h2 class="inline-heading"><strong>Project Manager</strong></h2>,      <h3 class="inline-heading"><strong> <i>Rendezvous 050 v.o.f.</i></strong></h3></dd>
-  <dd>Groningen, Netherlands &nbsp;·&nbsp; Logistics, event organisation, executive direction</dd>
+  <dd>Groningen, Netherlands &nbsp;·&nbsp; Logistics, event organization, executive direction</dd>
     <ul>
-      <li>Coordinated budget, organisation and management of over 15 events with 300+ attendants at multiple venues.</li>
-      <li>Key Skills: <i>Logistics, Event Management, Brand Identity, Community Organisation</i></li>
+      <li>Coordinated budget, organization and management of over 15 events with 300+ attendants at multiple venues.</li>
     </ul>
 </dl>
 <br><br>
@@ -166,63 +165,24 @@ Education
 <dl>
   <br>
   <dt>Current</dt>
-  <dd>
-    <p><a href="https://www.ub.edu/portal/web/fisica"><strong>MSc, Physics of Complex Systems and Biophysics</strong></a>.
-    (Universitat de Barcelona, Spain)</p>
-    <ul>
-      <li>Relevant keywords: stochastic and noisy processes, complex networks, agent-based modelling, statistical physics, nonlinear dynamics.</li>
-      <li>Thesis: <i>Real World Complex Network Geometry.</i></li>
-    </ul>
-  </dd>
+  <dd><strong>MSc Physics of Complex Systems and Biophysics</strong> — Universitat de Barcelona</dd>
+  <dd>Relevant keywords: stochastic and noisy processes, complex networks, agent-based modelling, statistical physics, nonlinear dynamics.</dd>
 </dl>
 <br>
 <hr class="small" />
 <br>
 
 <dl>
-  <dt>2021-2023</dt>
-  <dd>
-    <p><a href="https://www.upf.edu/web/smc"><strong>MSc, Sound and Music Computing</strong></a>.
-    (Universitat Pompeu Fabra, Barcelona, Spain)</p>
-    <ul>
-      <li><em>Grade Average 8.8/10</em></li>
-      <li>Multimodal Music Interaction Lab</li>
-      <li>Standout courses included Audio Signal Processing, Music Perception and Cognition, Systems Design, Integration and Control, and Computational Music Creativity.</li>
-      <li>Master's Thesis: <i>Tap to Drums: Extending Monophonically Tapped Rhythms to Polyphonic Drum Pattern Generation.</i></li>
-    </ul>
-  </dd>
+  <dt>2023</dt>
+  <dd><strong>MSc Sound and Music Computing</strong> — Universitat Pompeu Fabra &nbsp;·&nbsp; 8.8/10</dd>
 </dl>
 <br>
 <hr class="small" />
 <br>
 
 <dl>
-  <dt>2017-2021</dt>
-  <dd>
-    <p><a href="https://www.rug.nl/bachelors/artificial-intelligence/?lang=en"><strong>BSc, Artificial Intelligence</strong></a>.
-    (University of Groningen, The Netherlands)</p>
-    <ul>
-      <li><em>Grade Average 7.1</em></li>
-      <li>Standout courses included Biopsychology, Neural Networks, Linguistics, Multivariate Calculus, Linear Algebra &amp; Statistics.</li>
-      <li>Bachelor's Thesis: <a href="https://github.com/peter-clark/research-papers/blob/main/Effect_of_External_Motivation_on_Action_Selection_in_Working_Memory_Tasks/Effect_of_External_Motivation_on_Action_Selection_in_Working_Memory_Tasks.pdf"><i>The Effect of External Motivation on Strategy-Selection in Working Memory Updating Tasks.</i></a></li>
-    </ul>
-  </dd>
-</dl>
-<br>
-<hr class="small" />
-<br>
-
-<dl>
-  <dt>2017-2021</dt>
-  <dd>
-    <p><a href="https://www.rug.nl/bachelors/filosofie/?lang=en"><strong>BA, Philosophy of Cognitive Science</strong></a>.
-    (University of Groningen, The Netherlands)</p>
-    <ul>
-      <li><em>Grade Average 7.9</em></li>
-      <li>Standout courses included Philosophy of AI &amp; Cognition, the Life Sciences &amp; the Natural Sciences, Reasoning &amp; Arguing, and Advanced Logic.</li>
-      <li>Bachelor's Thesis: <a href="https://github.com/peter-clark/research-papers/blob/main/Consciousness_In_NonHuman_Animals/Consciousness_In_NonHuman_Animals.pdf"><i>Consciousness in Non-Human Animals: Problems and Progress.</i></a></li>
-    </ul>
-  </dd>
+  <dt>2021</dt>
+  <dd><strong>BSc Artificial Intelligence</strong> &nbsp;·&nbsp; <strong>BA Philosophy of Cognitive Science</strong> — University of Groningen</dd>
 </dl>
 <br><br>
 
@@ -236,24 +196,22 @@ Additional
   <br>
   <dt>Languages</dt>
   <dd>English (native), Spanish (C1), German (B1), Catalan (A1)</dd>
-  <dt>Work Authorisation</dt>
+  <dt>Work Authorization</dt>
   <dd>Spanish resident with permission to work; no sponsorship required for EU-based roles.</dd>
 </dl>
 <br>
 <hr class="small" />
 
 <!-- ENTRY TEMPLATE — copy, uncomment, and fill in.
-     For a JOB, place it under Experience; for a PROJECT, under
-     Selected Projects; for a DEGREE, under Education.
+     Under Experience for a job, Selected Projects for a project.
 
   <dl>
-    <dt>Start - End (dates)</dt>
-    <dd class="inline-heading"><h2 class="inline-heading"><strong>Role / Project / Degree</strong></h2>,
-        <h3 class="inline-heading"><strong> <i>Organisation / Institution</i></strong></h3></dd>
+    <dt>Start – End</dt>
+    <dd class="inline-heading"><h2 class="inline-heading"><strong>Role / Project</strong></h2>,
+        <h3 class="inline-heading"><strong> <i>Organisation</i></strong></h3></dd>
     <dd>City, Country</dd>
     <ul>
       <li>Bullet point</li>
-      <li>Key Skills: <i>named, literally</i></li>
     </ul>
   </dl>
   <br>
