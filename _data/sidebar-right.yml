@@ -20,10 +20,6 @@
     - name: Bactra, C. Shalizi
       url: https://bactra.com
 
-- title: Diffusion
-  link: /simulations/diffusion/
-  text: Content goes here
-
 - title: Sandpile
   link: /simulations/sandpile/
   image: /assets/images/panels/sandpile_tile.gif
@@ -33,6 +29,19 @@
     The Bak–Tang–Wiesenfeld model demonstrates self-organized
     criticality, producing scale-free avalanches and fractal
     patterns.
+
+- title: Brownian Motion
+  link: /simulations/brownian/
+  image: /assets/images/panels/brownian_tile.gif
+  reveal: true
+  pixelated: true
+  text: >
+    Random walks in 1-D and 2-D — diffusive spreading, first-passage
+    times against an absorbing wall, and drift under a field.
+
+- title: Diffusion
+  link: /simulations/diffusion/
+  text: Content goes here
 
 - title: tbd
   text: ""

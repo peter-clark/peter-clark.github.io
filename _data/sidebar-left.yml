@@ -58,9 +58,6 @@
       meta: BA thesis, RUG, 2021
       url: https://github.com/peter-clark/research-papers/blob/main/Consciousness_In_NonHuman_Animals/Consciousness_In_NonHuman_Animals.pdf
 
-- title: Posts
-  posts: 5
-
 - title: Percolation
   link: /simulations/percolation/
   image: /assets/images/panels/percolation_tile.gif
@@ -79,14 +76,10 @@
     The Drossel–Schwabl model self-organizes to a critical
     state where fire sizes follow a power law.
 
-- title: Brownian Motion
-  link: /simulations/brownian/
-  image: /assets/images/panels/brownian_tile.gif
-  reveal: true
-  pixelated: true
-  text: >
-    Random walks in 1-D and 2-D — diffusive spreading, first-passage
-    times against an absorbing wall, and drift under a field.
+
+- title: Posts
+  posts: 5
+
 
 # ------------------------------------------------------------
 # EXAMPLE: a panel with a gif in it.

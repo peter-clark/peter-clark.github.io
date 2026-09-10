@@ -1,0 +1,63 @@
+{% comment %}
+============================================================
+CENTRE PANEL — one extra box below the page's main one.
+
+Same idea as the sidebar panels: you describe a panel in a
+page's front matter and this builds it. You should not need to
+edit this file to add one.
+
+IN A PAGE'S FRONT MATTER
+
+  panels:
+    - title: Simulations
+      grid: simulations      # a file in _data/, minus the .yml
+      cols: 3
+
+    - title: Posts
+      posts: 6               # most recent entries from _posts
+      cols: 3
+
+    - title: About the models
+      text: A paragraph of copy.
+
+KEYS (title is the only one every panel wants)
+
+  title   heading at the top of the box, inside the frame.
+          Omit for an untitled box.
+  text    a paragraph of copy.
+  grid    name of a file in _data/ -> a button grid built from
+          it. Each entry needs a label (title or name) and a
+          destination (link or url).
+  posts   N -> a button grid of the N most recent posts.
+  cols    columns for the grid. Default 3.
+  limit   cap on how many `grid` entries to show.
+  empty   text shown when a grid has nothing to list.
+  html    raw HTML, for anything the keys above miss.
+
+Blocks render in this order, and each is skipped when its key
+is absent: text -> grid / posts -> html.
+
+Rendered by _layouts/default.html, which loops over page.panels
+after the main content box. The box itself is menubox.html.
+============================================================
+{% endcomment %}
+
+{% assign p = include.panel %}
+
+{% comment %} Jekyll validates include parameters before Liquid evaluates
+     them, and a value must be a quoted string or match [\w.-]+ — so
+     `items=site.data[p.grid]` is a syntax error, brackets and all. Resolve
+     the lookup into a plain variable here and pass that instead. {% endcomment %}
+{% if p.grid %}{% assign grid_items = site.data[p.grid] %}{% endif %}
+
+{% capture panel_body %}
+{% if p.text %}<p class="text-justify">{{ p.text }}</p>{% endif %}
+
+{% if p.grid %}{% include button-grid.html items=grid_items cols=p.cols limit=p.limit empty=p.empty %}{% endif %}
+
+{% if p.posts %}{% include button-grid.html posts=p.posts cols=p.cols empty=p.empty %}{% endif %}
+
+{% if p.html %}{{ p.html }}{% endif %}
+{% endcapture %}
+
+{% include menubox.html title=p.title content=panel_body %}

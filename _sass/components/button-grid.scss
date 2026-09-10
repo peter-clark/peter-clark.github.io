@@ -1,0 +1,96 @@
+@charset "utf-8";
+
+/* ============================================================
+   BUTTON GRID — a grid of buttons, N columns across.
+
+   Markup is _includes/button-grid.html.
+
+     .btn-grid            the grid
+       li > .btn-grid-btn one button per cell
+     .btn-grid-title      optional small heading above it
+     .btn-grid-empty      shown when there is nothing to list
+
+   NO FRAME HERE, deliberately. The grid is meant to sit in a
+   box that already has one — a menubox in the centre column.
+   Framing it as well put a border inside a border and left the
+   block looking like it belonged to the panel above it rather
+   than being a panel in its own right.
+
+   COLUMN COUNT is a custom property set by the include, not a
+   class per count. `cols: 4` in the front matter is the whole
+   change; nothing here needs touching.
+   ============================================================ */
+
+$bgrid-gap: 8px;
+
+.btn-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--btn-grid-cols, 3), 1fr);
+  gap: $bgrid-gap;
+
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  /* base/typography indents lists inside the content box; a grid
+     of buttons is not prose and should sit flush in its box. */
+  .menuinfoL & { padding-left: 0; }
+
+  > li {
+    display: flex;   // lets the button fill its cell
+    margin: 0;
+    min-width: 0;    // and lets a long label ellipsize instead of
+                     // forcing the column wider
+  }
+}
+
+/* The site's one button, at grid size. Box only — the bevel comes
+   from .btn3d and is never redefined here (see the note at the
+   foot of components/button.scss). */
+.btn-grid-btn {
+  @extend .btn3d;
+
+  width: 100%;
+  min-width: 0;
+  height: 30px;
+  line-height: 22px;
+  font-size: $fs-small;
+}
+
+/* An entry with no destination. Still drawn, so a gap in the data
+   is visible rather than silently missing, but it does not light
+   up or invite a click. */
+.btn-grid-btn.is-off {
+  color: $c-text-dim;
+  cursor: default;
+
+  &:hover,
+  &:focus {
+    color: $c-text-dim;
+  }
+
+  &:hover::before,
+  &:focus::before {
+    @include btn-face-rest;
+  }
+}
+
+/* Only for a grid dropped into the middle of page copy, where
+   there is no box title to name it. A panel's own .menutitle
+   does this job in the usual case. */
+.btn-grid-title,
+.menuinfoL .btn-grid-title {
+  margin: 0 0 10px 0;
+  color: $c-heading-alt;
+  font-size: 1em;
+  font-weight: bold;
+  letter-spacing: 0.04em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.btn-grid-empty {
+  margin: 0;
+  color: $c-text-dim;
+  text-align: center;
+}

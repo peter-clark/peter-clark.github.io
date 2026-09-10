@@ -1,0 +1,47 @@
+{% comment %}
+============================================================
+MENUBOX — one box in the centre column.
+
+This is the chrome that lifts a panel off the grey page ground:
+the top cap, the repeating filler and the bottom cap, cut to
+$w-centre. It is the centre-column equivalent of a sidebar
+panel (_includes/panel.html).
+
+It used to be written out inline in _layouts/default.html, which
+meant the page could only ever have ONE centre box — anything
+extra had to be a bordered div inside it, which is not the same
+thing and does not sit on the page background. Extracted here so
+the layout can stack as many as a page asks for.
+
+USAGE
+  Direct, with content captured first:
+
+    {% capture body %}<p>Anything at all.</p>{% endcapture %}
+    {% include menubox.html title="Heading" content=body %}
+
+  Usually you want _includes/centre-panel.html instead, which
+  builds the contents from a `panels:` entry in front matter and
+  then calls this.
+
+PARAMETERS
+  title    optional. Rendered in .menutitle, centred at the top
+           inside the box. Omit for an untitled box.
+  content  the HTML to place in the content well. Capture it
+           first — an include parameter takes a string, not a
+           block.
+
+The well is $w-centre minus the caps' side margins; prose inside
+it is styled by base/typography under .menuinfoL.
+============================================================
+{% endcomment %}
+
+<div class="menubox">
+    <div class="menutop"></div>
+    <div class="menufill">
+        {% if include.title %}<div class="menutitle">{{ include.title }}</div>{% endif %}
+        <div class="menuinfoL">
+            {{ include.content }}
+        </div>
+    </div>
+    <div class="menufoot"></div>
+</div>

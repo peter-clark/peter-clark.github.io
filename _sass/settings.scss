@@ -55,16 +55,29 @@ $gap-panel:       15px;
 
 /* ---- Colours -----------------------------------------------
    Sampled from the theme art so CSS and bitmaps stay in step.
+
+   CONTRAST. Prose sits on the content box, which is #2f2f2f
+   (the flat field of menu_filler.gif). The body font is $fs-body
+   ~ 11px, well under the 18px that would earn the large-text
+   exemption, so every text colour here has to clear 4.5:1
+   against that ground.
+
+   The old ramp did not: $c-text was 3.39:1 and $c-text-dim only
+   2.66:1, which is why the page read as washed out. The values
+   below were solved for a target ratio rather than nudged by
+   eye, and the ordering between the roles is preserved so the
+   hierarchy still reads. Ratios against #2f2f2f are in the
+   comments; if you change one, re-solve it rather than guessing.
    ------------------------------------------------------------ */
 $c-page:         #383838;  // ground behind the frame
-$c-text:         #808080;  // default body / panel text
-$c-text-dim:     #6f6f6f;  // captions, meta, descriptions
-$c-text-ui:      #bdbdbd;  // control labels — needs to be readable
-$c-text-ui-dim:  #949494;  // readouts and secondary control text
-$c-text-bright:  #cfcfcf;  // banner title
-$c-heading:      #b0b0b0;  // headings inside content boxes
-$c-heading-alt:  #999999;  // centre box title
-$c-link:         #a0a0a0;  // prose links
+$c-text:         #b5b5b5;  // default body / panel text        6.5:1
+$c-text-dim:     #9a9a9a;  // captions, meta, descriptions      4.7:1
+$c-text-ui:      #d0d0d0;  // control labels — needs to be readable
+$c-text-ui-dim:  #ababab;  // readouts and secondary control text
+$c-text-bright:  #e8e8e8;  // banner title
+$c-heading:      #d2d2d2;  // headings inside content boxes     9.0:1
+$c-heading-alt:  #c0c0c0;  // centre box title                  7.3:1
+$c-link:         #c8c8c8;  // prose links                       8.0:1
 $c-accent:       #e67300;  // theme orange (hover, highlights)
 $c-rule:         #222222;  // list separators
 $c-inset:        #060606;  // canvas / inset backgrounds

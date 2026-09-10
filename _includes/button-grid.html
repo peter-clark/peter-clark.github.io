@@ -1,0 +1,65 @@
+{% comment %}
+============================================================
+BUTTON GRID — a grid of buttons, N columns across.
+
+The grid ONLY. It carries no frame of its own: it is meant to
+sit in a box that already has one, which on the centre column
+means a menubox (see centre-panel.html). Giving it a second
+border inside that box was the earlier mistake.
+
+USAGE
+  Normally you do not call this directly — put a `panels:` entry
+  in a page's front matter and centre-panel.html calls it. Call
+  it by hand only to drop a grid into the middle of page copy:
+
+    {% include button-grid.html items=site.data.simulations cols=3 %}
+    {% include button-grid.html posts=6 cols=2 %}
+
+  NOTE: Liquid runs before the page is parsed as HTML, so an
+  include left inside an HTML comment still renders. Wrap
+  commented-out examples in a raw block.
+
+PARAMETERS
+  items   a list of entries. Each needs a label under `title` or
+          `name`, and a destination under `link` or `url`. An
+          entry with no destination is drawn as an unlit,
+          unclickable button rather than dropped, so a gap in
+          the data is visible.
+  posts   N -> the N most recent entries from _posts. Used only
+          when `items` is absent.
+  cols    columns across. Default 3. Read from a custom
+          property, so a new column count needs no CSS change.
+  limit   cap on how many of `items` to show. Default: all.
+  title   optional small heading above the grid. Usually left
+          off — the box's own title does that job.
+  empty   text shown when there is nothing to list.
+
+Styling is _sass/components/button-grid.scss. The buttons are
+the site's one button (.btn3d) at grid size; never restyle the
+bevel here.
+============================================================
+{% endcomment %}
+
+{% assign bg_items = include.items %}
+{% assign bg_limit = include.limit | default: 9999 %}
+
+{% comment %} No explicit list? Fall back to posts, if asked for. {% endcomment %}
+{% if bg_items == nil and include.posts %}
+  {% assign bg_items = site.posts %}
+  {% assign bg_limit = include.posts %}
+{% endif %}
+
+{% assign bg_cols = include.cols | default: 3 %}
+
+{% if include.title %}<h2 class="btn-grid-title">{{ include.title }}</h2>{% endif %}
+{% if bg_items and bg_items != empty %}
+<ul class="btn-grid" style="--btn-grid-cols: {{ bg_cols }};">
+{% for item in bg_items limit: bg_limit %}
+{% assign bg_name = item.title | default: item.name %}
+{% assign bg_link = item.link | default: item.url %}
+<li>{% if bg_link %}<a class="btn-grid-btn" href="{{ bg_link | relative_url }}" title="{{ bg_name }}">{{ bg_name }}</a>{% else %}<span class="btn-grid-btn is-off" title="{{ bg_name }}">{{ bg_name }}</span>{% endif %}</li>
+{% endfor %}
+</ul>
+{% else %}
+<p class="btn-grid-empty">{{ include.empty | default: "Nothing here yet." }}</p>
+{% endif %}

@@ -242,13 +242,15 @@
 
   /* ------------------------------------------------------------------ */
   /* SimTheme: one shared palette for every simulation.       */
-  /* Kept in sync with _sass/theme.scss. Change it here to re-skin    */
+  /* Kept in sync with _sass/settings.scss. Change it here to re-skin */
   /* all canvases + graphs at once.                                      */
   /* ------------------------------------------------------------------ */
   const SimTheme = {
     panelBg: '#0b0b0b',   // canvas / plot background (matches .sim-graph)
     grid:    '#333333',   // plot gridlines
-    text:    '#9a9a9a',   // plot font colour
+    text:    '#b0b0b0',   // plot font colour — axis labels are small, so
+                          // this tracks the brighter prose ramp rather
+                          // than sitting a step under it
     accent:  '#e67300',   // orange accent
     accentRGB: [230, 115, 0],
     font: 'Verdana, Geneva, Tahoma, sans-serif',

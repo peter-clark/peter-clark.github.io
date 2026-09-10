@@ -32,17 +32,25 @@
                 {% include sidebar.html data="sidebar-right" %}
             </div>
 
+            {% comment %} The centre column is a STACK of boxes, not one box.
+                 The first holds the page's own content; any others are
+                 described under `panels:` in the page's front matter and
+                 built by centre-panel.html. Both use the same menubox
+                 chrome, so a panel added this way sits on the page ground
+                 exactly like the main one rather than inside it. {% endcomment %}
             <div id="COL-center">
-                <div class="menubox">
-                    <div class="menutop"></div>
-                    <div class="menufill">
-                        {% unless page.menutitle == false %}<div class="menutitle">{{ page.title }}</div>{% endunless %}
-                        <div class="menuinfoL">
-                            {{ content }}
-                        </div>
-                    </div>
-                    <div class="menufoot"></div>
-                </div>
+
+                {% capture main_content %}{{ content }}{% endcapture %}
+                {% if page.menutitle == false %}
+                {% include menubox.html content=main_content %}
+                {% else %}
+                {% include menubox.html title=page.title content=main_content %}
+                {% endif %}
+
+                {% for panel in page.panels %}
+                {% include centre-panel.html panel=panel %}
+                {% endfor %}
+
             </div>
 
         </div>
